@@ -1,7 +1,17 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { authApi } from '../api/auth';
 import { userApi } from '../api/user';
-import { registerUnauthorizedHandler, tokenStorage } from '../api/client';
+import {
+  registerUnauthorizedHandler,
+  tokenStorage,
+} from '../api/client';
+
 import type {
   AuthRequest,
   LoginRequest,
@@ -23,15 +33,24 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  /**
+   * Refresh the currently authenticated user's profile.
+   * If there is no valid token, the user is treated as logged out.
+   */
   const refreshUser = useCallback(async () => {
-    if (!tokenStorage.getToken()) {
+    const token = tokenStorage.getToken();
+
+    if (!token) {
       setUser(null);
       return;
     }
+
     try {
       const profile = await userApi.getProfile();
       setUser(profile);
@@ -41,26 +60,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  /**
+   * Restore authentication state when the application starts.
+   * Also handle unauthorized API responses globally.
+   */
   useEffect(() => {
-    refreshUser().finally(() => setLoading(false));
-    registerUnauthorizedHandler(() => setUser(null));
+    refreshUser().finally(() => {
+      setLoading(false);
+    });
+
+    registerUnauthorizedHandler(() => {
+      setUser(null);
+    });
   }, [refreshUser]);
 
+  /**
+   * Login the user and immediately load their profile.
+   */
   const login = async (data: LoginRequest) => {
     await authApi.login(data);
     await refreshUser();
   };
 
+  /**
+   * Register a new account.
+   */
   const register = async (data: AuthRequest) => {
     const res = await authApi.register(data);
-    return { message: res.message };
+
+    return {
+      message: res.message,
+    };
   };
 
+  /**
+   * Verify OTP and refresh the authenticated user.
+   */
   const verifyOtp = async (data: OtpVerificationRequest) => {
     await authApi.verifyOtp(data);
     await refreshUser();
   };
 
+  /**
+   * Logout the current user.
+   * The local authentication state is cleared even if
+   * the API logout request fails.
+   */
   const logout = async () => {
     try {
       await authApi.logout();
@@ -74,6 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'ADMIN',
+
     login,
     register,
     verifyOtp,
@@ -81,11 +127,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     refreshUser,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
+/**
+ * Access authentication state and actions throughout the application.
+ */
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+
+  if (!ctx) {
+    throw new Error(
+      'useAuth must be used within AuthProvider'
+    );
+  }
+
   return ctx;
 }
+
