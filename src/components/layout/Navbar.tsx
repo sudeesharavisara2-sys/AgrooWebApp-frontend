@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User, ChevronDown } from 'lucide-react';
+import { Menu, X, LogOut, User, ChevronDown, Sprout } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const navLinks = [
@@ -29,12 +29,11 @@ const Navbar: React.FC = () => {
       <div
         className="
           mx-auto flex max-w-6xl items-center justify-between
-          rounded-2xl border border-white/50
-          bg-white/70 px-4 py-3
-          shadow-[0_8px_32px_rgba(31,38,135,0.10)]
+          rounded-2xl border border-white/20
+          bg-emerald-950/40 px-4 py-3
+          shadow-[0_8px_32px_rgba(0,0,0,0.37)]
           backdrop-blur-xl
-          supports-[backdrop-filter]:bg-white/60
-          dark:border-white/10
+          supports-[backdrop-filter]:bg-emerald-950/30
           md:px-6
         "
       >
@@ -42,22 +41,22 @@ const Navbar: React.FC = () => {
         <Link
           to="/"
           onClick={closeMenu}
-          className="group flex items-center gap-2.5"
+          className="group flex items-center gap-2.5 text-white"
         >
           <div
             className="
               flex h-10 w-10 items-center justify-center
-              rounded-xl border border-white/60
-              bg-white/60 text-lg
-              shadow-sm backdrop-blur-md
+              rounded-xl border border-white/20
+              bg-emerald-600 text-white
+              shadow-md backdrop-blur-md
               transition-transform duration-200
               group-hover:scale-105
             "
           >
-            🌾
+            <Sprout size={20} />
           </div>
 
-          <span className="text-xl font-bold tracking-tight text-agroo-700">
+          <span className="text-xl font-black tracking-wider text-white">
             Agroo
           </span>
         </Link>
@@ -66,8 +65,8 @@ const Navbar: React.FC = () => {
         <nav
           className="
             hidden items-center gap-1
-            rounded-2xl border border-white/50
-            bg-white/50 p-1.5
+            rounded-2xl border border-white/15
+            bg-white/10 p-1.5
             shadow-sm backdrop-blur-lg
             md:flex
           "
@@ -78,9 +77,9 @@ const Navbar: React.FC = () => {
               to={link.to}
               className="
                 rounded-xl px-4 py-2
-                text-sm font-medium text-gray-600
+                text-xs font-semibold text-emerald-100/80
                 transition-all duration-200
-                hover:bg-white/80 hover:text-agroo-700
+                hover:bg-white/20 hover:text-white
                 hover:shadow-sm
               "
             >
@@ -94,9 +93,9 @@ const Navbar: React.FC = () => {
                 to="/feed"
                 className="
                   rounded-xl px-4 py-2
-                  text-sm font-medium text-gray-600
+                  text-xs font-semibold text-emerald-100/80
                   transition-all duration-200
-                  hover:bg-white/80 hover:text-agroo-700
+                  hover:bg-white/20 hover:text-white
                   hover:shadow-sm
                 "
               >
@@ -107,9 +106,9 @@ const Navbar: React.FC = () => {
                 to="/chat"
                 className="
                   rounded-xl px-4 py-2
-                  text-sm font-medium text-gray-600
+                  text-xs font-semibold text-emerald-100/80
                   transition-all duration-200
-                  hover:bg-white/80 hover:text-agroo-700
+                  hover:bg-white/20 hover:text-white
                   hover:shadow-sm
                 "
               >
@@ -123,9 +122,9 @@ const Navbar: React.FC = () => {
               to="/admin"
               className="
                 rounded-xl px-4 py-2
-                text-sm font-medium text-agroo-700
+                text-xs font-bold text-emerald-300
                 transition-all duration-200
-                hover:bg-agroo-50
+                hover:bg-emerald-500/20 hover:text-white
               "
             >
               Admin
@@ -141,44 +140,44 @@ const Navbar: React.FC = () => {
                 to="/profile"
                 className="
                   flex items-center gap-2
-                  rounded-xl border border-white/60
-                  bg-white/50 px-3 py-2
-                  text-sm font-medium text-gray-700
+                  rounded-xl border border-white/20
+                  bg-white/10 px-3 py-2
+                  text-xs font-medium text-white
                   shadow-sm backdrop-blur-md
                   transition-all duration-200
-                  hover:bg-white/80 hover:text-agroo-700
+                  hover:bg-white/20 hover:text-emerald-200
                 "
               >
                 <div
                   className="
                     flex h-7 w-7 items-center justify-center
-                    rounded-lg bg-agroo-100 text-agroo-700
+                    rounded-lg bg-emerald-500/20 text-emerald-300
                   "
                 >
-                  <User size={15} />
+                  <User size={14} />
                 </div>
 
                 <span className="max-w-[120px] truncate">
                   {user?.fullName || user?.username}
                 </span>
 
-                <ChevronDown size={15} className="text-gray-400" />
+                <ChevronDown size={14} className="text-emerald-300/70" />
               </Link>
 
               <button
                 className="
                   flex h-10 w-10 items-center justify-center
-                  rounded-xl border border-red-100
-                  bg-red-50/70 text-red-500
+                  rounded-xl border border-red-500/30
+                  bg-red-500/10 text-red-400
                   transition-all duration-200
-                  hover:bg-red-100 hover:text-red-600
-                  active:scale-95
+                  hover:bg-red-500/20 hover:text-red-300
+                  active:scale-95 cursor-pointer
                 "
                 onClick={handleLogout}
                 aria-label="Log out"
                 title="Log out"
               >
-                <LogOut size={17} />
+                <LogOut size={16} />
               </button>
             </>
           ) : (
@@ -186,12 +185,12 @@ const Navbar: React.FC = () => {
               <Link
                 to="/login"
                 className="
-                  rounded-xl border border-white/60
-                  bg-white/50 px-4 py-2
-                  text-sm font-medium text-gray-700
+                  rounded-xl border border-white/20
+                  bg-white/10 px-4 py-2
+                  text-xs font-semibold text-white
                   shadow-sm backdrop-blur-md
                   transition-all duration-200
-                  hover:bg-white/80 hover:text-agroo-700
+                  hover:bg-white/20
                 "
               >
                 Log in
@@ -200,13 +199,12 @@ const Navbar: React.FC = () => {
               <Link
                 to="/register"
                 className="
-                  rounded-xl bg-agroo-700 px-4 py-2
-                  text-sm font-semibold text-white
-                  shadow-md shadow-agroo-700/20
+                  rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-2
+                  text-xs font-bold text-emerald-950
+                  shadow-md shadow-emerald-500/20
                   transition-all duration-200
-                  hover:-translate-y-0.5 hover:bg-agroo-800
-                  hover:shadow-lg hover:shadow-agroo-700/20
-                  active:translate-y-0
+                  hover:from-emerald-400 hover:to-teal-300 hover:shadow-lg
+                  active:scale-95
                 "
               >
                 Sign up
@@ -219,11 +217,11 @@ const Navbar: React.FC = () => {
         <button
           className="
             flex h-10 w-10 items-center justify-center
-            rounded-xl border border-white/60
-            bg-white/60 text-gray-700
+            rounded-xl border border-white/20
+            bg-white/10 text-white
             shadow-sm backdrop-blur-md
             transition-all duration-200
-            hover:bg-white/90
+            hover:bg-white/20
             active:scale-95
             md:hidden
           "
@@ -241,11 +239,10 @@ const Navbar: React.FC = () => {
           className="
             mx-auto mt-2 max-w-6xl
             overflow-hidden rounded-2xl
-            border border-white/60
-            bg-white/75 p-3
-            shadow-[0_12px_40px_rgba(31,38,135,0.14)]
+            border border-white/20
+            bg-emerald-950/80 p-3
+            shadow-[0_12px_40px_rgba(0,0,0,0.5)]
             backdrop-blur-2xl
-            supports-[backdrop-filter]:bg-white/65
             md:hidden
           "
         >
@@ -257,9 +254,9 @@ const Navbar: React.FC = () => {
                 onClick={closeMenu}
                 className="
                   rounded-xl px-4 py-3
-                  text-sm font-medium text-gray-700
+                  text-xs font-semibold text-emerald-100/90
                   transition-all duration-200
-                  hover:bg-white/80 hover:text-agroo-700
+                  hover:bg-white/15 hover:text-white
                 "
               >
                 {link.label}
@@ -273,9 +270,9 @@ const Navbar: React.FC = () => {
                   onClick={closeMenu}
                   className="
                     rounded-xl px-4 py-3
-                    text-sm font-medium text-gray-700
+                    text-xs font-semibold text-emerald-100/90
                     transition-all duration-200
-                    hover:bg-white/80 hover:text-agroo-700
+                    hover:bg-white/15 hover:text-white
                   "
                 >
                   My Feed
@@ -286,9 +283,9 @@ const Navbar: React.FC = () => {
                   onClick={closeMenu}
                   className="
                     rounded-xl px-4 py-3
-                    text-sm font-medium text-gray-700
+                    text-xs font-semibold text-emerald-100/90
                     transition-all duration-200
-                    hover:bg-white/80 hover:text-agroo-700
+                    hover:bg-white/15 hover:text-white
                   "
                 >
                   Chat
@@ -302,16 +299,16 @@ const Navbar: React.FC = () => {
                 onClick={closeMenu}
                 className="
                   rounded-xl px-4 py-3
-                  text-sm font-semibold text-agroo-700
+                  text-xs font-bold text-emerald-300
                   transition-all duration-200
-                  hover:bg-agroo-50
+                  hover:bg-emerald-500/20 hover:text-white
                 "
               >
                 Admin
               </Link>
             )}
 
-            <div className="my-2 h-px bg-gray-200/60" />
+            <div className="my-2 h-px bg-white/10" />
 
             {isAuthenticated ? (
               <>
@@ -320,19 +317,19 @@ const Navbar: React.FC = () => {
                   onClick={closeMenu}
                   className="
                     flex items-center gap-3
-                    rounded-xl bg-white/50 px-4 py-3
-                    text-sm font-medium text-gray-700
+                    rounded-xl bg-white/10 px-4 py-3
+                    text-xs font-medium text-white
                     transition-all duration-200
-                    hover:bg-white/80
+                    hover:bg-white/20
                   "
                 >
                   <div
                     className="
                       flex h-9 w-9 items-center justify-center
-                      rounded-xl bg-agroo-100 text-agroo-700
+                      rounded-xl bg-emerald-500/20 text-emerald-300
                     "
                   >
-                    <User size={17} />
+                    <User size={16} />
                   </div>
 
                   <div className="flex flex-col">
@@ -341,7 +338,7 @@ const Navbar: React.FC = () => {
                     </span>
 
                     {user?.username && user?.fullName && (
-                      <span className="text-xs font-normal text-gray-400">
+                      <span className="text-[10px] font-normal text-emerald-300/60">
                         @{user.username}
                       </span>
                     )}
@@ -351,16 +348,16 @@ const Navbar: React.FC = () => {
                 <button
                   className="
                     mt-1 flex w-full items-center justify-center gap-2
-                    rounded-xl border border-red-100
-                    bg-red-50/70 px-4 py-3
-                    text-sm font-semibold text-red-600
+                    rounded-xl border border-red-500/30
+                    bg-red-500/10 px-4 py-3
+                    text-xs font-semibold text-red-400
                     transition-all duration-200
-                    hover:bg-red-100
-                    active:scale-[0.98]
+                    hover:bg-red-500/20 hover:text-red-300
+                    active:scale-[0.98] cursor-pointer
                   "
                   onClick={handleLogout}
                 >
-                  <LogOut size={17} />
+                  <LogOut size={16} />
                   Log out
                 </button>
               </>
@@ -371,11 +368,11 @@ const Navbar: React.FC = () => {
                   onClick={closeMenu}
                   className="
                     flex items-center justify-center
-                    rounded-xl border border-gray-200/70
-                    bg-white/60 px-4 py-3
-                    text-sm font-semibold text-gray-700
+                    rounded-xl border border-white/20
+                    bg-white/10 px-4 py-3
+                    text-xs font-semibold text-white
                     transition-all duration-200
-                    hover:bg-white
+                    hover:bg-white/20
                   "
                 >
                   Log in
@@ -386,11 +383,11 @@ const Navbar: React.FC = () => {
                   onClick={closeMenu}
                   className="
                     flex items-center justify-center
-                    rounded-xl bg-agroo-700 px-4 py-3
-                    text-sm font-semibold text-white
-                    shadow-md shadow-agroo-700/20
+                    rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-3
+                    text-xs font-bold text-emerald-950
+                    shadow-md shadow-emerald-500/20
                     transition-all duration-200
-                    hover:bg-agroo-800
+                    hover:from-emerald-400 hover:to-teal-300
                     active:scale-[0.98]
                   "
                 >

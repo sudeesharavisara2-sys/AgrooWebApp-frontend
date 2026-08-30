@@ -12,7 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import { getErrorMessage } from '../../utils/helpers';
 
-// Background images array (කෘෂිකාර්මික ස්වභාවික පින්තූර කිහිපයක්)
+// Background images array 
 const backgroundImages = [
   'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1920&q=85',
   'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1920&q=85',
