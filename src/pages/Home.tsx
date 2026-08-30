@@ -52,129 +52,116 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-0">
+    <div className="min-h-screen pb-0 relative bg-gray-900 text-white">
       
-      {/* =========================================================
-          DEDICATED HOME NAVBAR
+      {/* Background Image Container */}
+      <div className="absolute inset-0 z-0 h-full w-full overflow-hidden pointer-events-none">
+        <img 
+          src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1920&q=80" 
+          alt="Agricultural Hero Background" 
+          className="h-full w-full object-cover opacity-40 scale-105 fixed"
+        />
+        <div className="absolute inset-0 bg-gray-950/80 fixed" />
+      </div>
+
+{/* =========================================================
+          MODERN GLASSMORPHISM NAVBAR (Background එකට ගැලපෙන විදිහට)
           ========================================================= */}
-      <header className="sticky top-0 z-50 px-3 pt-3 sm:px-4">
-        <div
-          className="
-            mx-auto flex max-w-6xl items-center justify-between
-            rounded-2xl border border-white/20
-            bg-emerald-950/40 px-4 py-3
-            shadow-[0_8px_32px_rgba(0,0,0,0.37)]
-            backdrop-blur-xl
-            supports-[backdrop-filter]:bg-emerald-950/30
-            md:px-6
-          "
-        >
+      <header className="sticky top-0 left-0 right-0 z-50 w-full bg-black/30 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          
           {/* Logo */}
           <a
             href="#home"
             onClick={closeMenu}
             className="group flex items-center gap-2.5 text-white"
           >
-            <div
-              className="
-                flex h-10 w-10 items-center justify-center
-                rounded-xl border border-white/20
-                bg-emerald-600 text-white
-                shadow-md backdrop-blur-md
-                transition-transform duration-200
-                group-hover:scale-105
-              "
-            >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md transition-transform duration-200 group-hover:scale-105">
               <Sprout size={20} />
             </div>
-
             <span className="text-xl font-black tracking-wider text-white">
               Agroo
             </span>
           </a>
 
           {/* Desktop Navigation */}
-          <nav
-            className="
-              hidden items-center gap-1
-              rounded-2xl border border-white/15
-              bg-white/10 p-1.5
-              shadow-sm backdrop-blur-lg
-              md:flex
-            "
-          >
-            <a href="#home" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+          <nav className="hidden items-center gap-1.5 rounded-full bg-black/40 p-1.5 border border-white/10 shadow-2xl md:flex backdrop-blur-xl">
+            <a href="#home" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               Home
             </a>
-            <a href="#products" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+            <a href="#products" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               Products
             </a>
-            <a href="#machines" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+            <a href="#machines" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               Machines
             </a>
-            <a href="#about" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+            <a href="#about" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               About
             </a>
-            <a href="#contact" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+            <a href="#contact" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               Contact Us
             </a>
-            <Link to="/posts" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+            <Link to="/posts" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               Community
             </Link>
 
             {isAuthenticated && (
               <>
-                <Link to="/feed" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+                <Link to="/feed" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   My Feed
                 </Link>
-                <Link to="/chat" className="rounded-xl px-3 py-2 text-xs font-semibold text-emerald-100/85 transition-all duration-200 hover:bg-white/20 hover:text-white">
+                <Link to="/chat" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   Chat
                 </Link>
               </>
             )}
 
             {isAdmin && (
-              <Link to="/admin" className="rounded-xl px-3 py-2 text-xs font-bold text-emerald-300 transition-all duration-200 hover:bg-emerald-500/20 hover:text-white">
+              <Link to="/admin" className="rounded-full px-4 py-2 text-xs font-bold text-emerald-400 transition-all duration-300 hover:bg-emerald-500/30 hover:text-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]">
                 Admin
               </Link>
             )}
           </nav>
 
           {/* Desktop Auth Actions */}
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-3 md:flex">
             {isAuthenticated ? (
               <>
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-medium text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/20 hover:text-emerald-200"
+                  className="flex items-center gap-2.5 rounded-full border border-white/20 bg-black/40 px-3.5 py-2 text-xs font-medium text-gray-200 transition-all hover:bg-white/15 hover:text-white backdrop-blur-md shadow-lg"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-300">
-                    <User size={14} />
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/30 text-emerald-300">
+                    <User size={13} />
                   </div>
                   <span className="max-w-[100px] truncate">{user?.fullName || user?.username}</span>
-                  <ChevronDown size={14} className="text-emerald-300/70" />
+                  <ChevronDown size={14} className="text-gray-400" />
                 </Link>
 
                 <button
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 transition-all hover:bg-red-500/20 hover:text-red-300 active:scale-95 cursor-pointer"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 text-red-400 transition-all hover:bg-red-500/25 hover:text-red-200 active:scale-95 cursor-pointer backdrop-blur-md shadow-lg"
                   onClick={handleLogout}
                   aria-label="Log out"
                   title="Log out"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={15} />
                 </button>
               </>
             ) : (
               <>
+                {/* Updated Clear Outline Login Button */}
                 <Link
                   to="/login"
-                  className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/20"
+                  className="flex items-center gap-2 rounded-full border-2 border-emerald-500/60 bg-emerald-950/30 px-5 py-2 text-xs font-bold text-emerald-300 transition-all duration-300 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 backdrop-blur-md"
                 >
-                  Log in
+                  <User size={14} />
+                  <span>Log in</span>
                 </Link>
+
+                {/* Primary Sign Up Button */}
                 <Link
                   to="/register"
-                  className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-2 text-xs font-bold text-emerald-950 shadow-md shadow-emerald-500/20 transition-all hover:from-emerald-400 hover:to-teal-300 active:scale-95"
+                  className="rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all hover:from-emerald-500 hover:to-teal-500 hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95"
                 >
                   Sign up
                 </Link>
@@ -184,7 +171,7 @@ const Home: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-black/40 text-gray-200 transition-all hover:bg-white/10 active:scale-95 md:hidden backdrop-blur-md"
             onClick={() => setOpen((current) => !current)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -192,97 +179,7 @@ const Home: React.FC = () => {
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-
-        {/* Mobile Navigation Dropdown */}
-        {open && (
-          <div
-            className="
-              mx-auto mt-2 max-w-6xl
-              overflow-hidden rounded-2xl
-              border border-white/20
-              bg-emerald-950/90 p-3
-              shadow-[0_12px_40px_rgba(0,0,0,0.5)]
-              backdrop-blur-2xl
-              md:hidden
-            "
-          >
-            <nav className="flex flex-col gap-1">
-              <a href="#home" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                Home
-              </a>
-              <a href="#products" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                Products
-              </a>
-              <a href="#machines" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                Machines
-              </a>
-              <a href="#about" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                About
-              </a>
-              <a href="#contact" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                Contact Us
-              </a>
-              <Link to="/posts" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                Community
-              </Link>
-
-              {isAuthenticated && (
-                <>
-                  <Link to="/feed" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                    My Feed
-                  </Link>
-                  <Link to="/chat" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-semibold text-emerald-100/90 hover:bg-white/15 hover:text-white">
-                    Chat
-                  </Link>
-                </>
-              )}
-
-              {isAdmin && (
-                <Link to="/admin" onClick={closeMenu} className="rounded-xl px-4 py-3 text-xs font-bold text-emerald-300 hover:bg-emerald-500/20 hover:text-white">
-                  Admin
-                </Link>
-              )}
-
-              <div className="my-2 h-px bg-white/10" />
-
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/profile"
-                    onClick={closeMenu}
-                    className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-xs font-medium text-white hover:bg-white/20"
-                  >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300">
-                      <User size={16} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span>{user?.fullName || user?.username || 'Profile'}</span>
-                    </div>
-                  </Link>
-
-                  <button
-                    className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs font-semibold text-red-400 hover:bg-red-500/20 active:scale-[0.98] cursor-pointer"
-                    onClick={handleLogout}
-                  >
-                    <LogOut size={16} />
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  <Link to="/login" onClick={closeMenu} className="flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-xs font-semibold text-white hover:bg-white/20">
-                    Log in
-                  </Link>
-                  <Link to="/register" onClick={closeMenu} className="flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-3 text-xs font-bold text-emerald-950 shadow-md active:scale-[0.98]">
-                    Create account
-                  </Link>
-                </div>
-              )}
-            </nav>
-          </div>
-        )}
       </header>
-
       {/* =========================================================
           1. HOME / HERO SECTION
           ========================================================= */}
@@ -298,9 +195,7 @@ const Home: React.FC = () => {
 
         <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20 py-28 sm:py-36 lg:py-44 flex flex-col items-start justify-center">
           <div className="max-w-3xl space-y-6 text-left">
-            <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 bg-emerald-900/60 border border-emerald-500/30 rounded-full backdrop-blur-md">
-              🌱 Welcome to Agroo Ecosystem
-            </span>
+            
 
             <h1 className="text-4xl font-black tracking-tight sm:text-6xl leading-tight text-white drop-shadow-md">
               Sri Lanka's Agricultural Marketplace
@@ -350,9 +245,7 @@ const Home: React.FC = () => {
             <div className="mx-auto max-w-7xl w-full space-y-6">
               <div className="flex items-center justify-between border-b border-white/20 pb-3">
                 <div>
-                  <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 bg-emerald-900/60 border border-emerald-500/30 rounded-full backdrop-blur-md mb-2">
-                    🌱 Marketplace
-                  </span>
+                  
                   <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
                     Fresh on the Marketplace
                   </h2>
@@ -447,7 +340,7 @@ const Home: React.FC = () => {
         <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20 py-28 sm:py-36 lg:py-44 flex flex-col items-center justify-center">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 bg-emerald-900/60 border border-emerald-500/30 rounded-full backdrop-blur-md">
-              🌱 About Agroo
+               About Agroo
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight drop-shadow-md">
               Empowering Sri Lankan Farming Communities
@@ -502,9 +395,7 @@ const Home: React.FC = () => {
           <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
             <div className="space-y-6 text-left">
-              <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 bg-emerald-900/60 border border-emerald-500/30 rounded-full backdrop-blur-md">
-                Get in Touch
-              </span>
+              
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight drop-shadow-md">
                 Have Questions? Let's Talk with Agroo Team.
               </h2>
@@ -517,19 +408,19 @@ const Home: React.FC = () => {
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
                     <Mail size={20} />
                   </div>
-                  <span className="font-medium">support@agroo.lk</span>
+                  <span className="font-medium">team@agroo.lk</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-200">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
                     <Phone size={20} />
                   </div>
-                  <span className="font-medium">+94 11 234 5678</span>
+                  <span className="font-medium">+94 72 950 2816</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-200">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
                     <MapPin size={20} />
                   </div>
-                  <span className="font-medium">Colombo, Sri Lanka</span>
+                  <span className="font-medium">Nittambuwa, Sri Lanka</span>
                 </div>
               </div>
             </div>
@@ -560,7 +451,7 @@ const Home: React.FC = () => {
                       required
                       value={contactForm.name}
                       onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      placeholder="John Doe" 
+                      placeholder="Kamal Abeysinghe" 
                       className="w-full rounded-xl border border-white/20 bg-black/40 px-4 py-3 text-xs text-white placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 backdrop-blur-sm"
                     />
                   </div>
@@ -572,7 +463,7 @@ const Home: React.FC = () => {
                       required
                       value={contactForm.email}
                       onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      placeholder="john@example.com" 
+                      placeholder="kamal@example.com" 
                       className="w-full rounded-xl border border-white/20 bg-black/40 px-4 py-3 text-xs text-white placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 backdrop-blur-sm"
                     />
                   </div>
@@ -678,7 +569,7 @@ const Home: React.FC = () => {
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <p>© {new Date().getFullYear()} Agroo (Pvt) Ltd. All rights reserved.</p>
             <p className="flex items-center gap-1">
-              Crafted with <Heart size={12} className="text-emerald-500 fill-emerald-500" /> for Sri Lankan Farmers
+              Crafted with Team Agroo <Heart size={12} className="text-emerald-500 fill-emerald-500" /> for Sri Lankan Farmers
             </p>
           </div>
         </div>
