@@ -58,26 +58,42 @@ export type ProductCategory =
   | 'DAIRY_PRODUCTS';
 
 export type ProductType =
+  // Fresh Produce & Crops
   | 'VEGETABLES'
   | 'FRUITS'
+  | 'RICE'
+  | 'GRAINS'
+  | 'YAMS_AND_ROOTS'
+  | 'SPICES'
   | 'SEEDLINGS'
+  | 'PLANTS_AND_FLOWERS'
+  | 'OTHER_CROPS'
+  // Livestock
   | 'CATTLE'
   | 'CHICKEN'
   | 'GOAT'
   | 'PIG'
   | 'BUFFALO'
   | 'OTHER_LIVESTOCK'
+  // Dairy
   | 'MILK'
   | 'CURD'
   | 'YOGURT'
   | 'CHEESE'
+  | 'OTHER_DAIRY'
+  // Fertilizers & Agro Chemicals
   | 'ORGANIC_FERTILIZER'
   | 'CHEMICAL_FERTILIZER'
   | 'COMPOST'
+  | 'LIQUID_FERTILIZER'
+  | 'PESTICIDES'
+  | 'OTHER_AGRO_CHEMICALS'
+  // Machinery & Equipment
   | 'TRACTOR'
   | 'HARVESTER'
   | 'TILLER'
   | 'SPRAYER'
+  | 'WATER_PUMPS'
   | 'OTHER_MACHINERY';
 
 export type SaleType = 'WHOLESALE' | 'RETAIL';
@@ -91,11 +107,16 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
 ];
 
 export const PRODUCT_TYPES: ProductType[] = [
-  'VEGETABLES', 'FRUITS', 'SEEDLINGS',
+  // Fresh Produce & Crops
+  'VEGETABLES', 'FRUITS', 'RICE', 'GRAINS', 'YAMS_AND_ROOTS', 'SPICES', 'SEEDLINGS', 'PLANTS_AND_FLOWERS', 'OTHER_CROPS',
+  // Livestock
   'CATTLE', 'CHICKEN', 'GOAT', 'PIG', 'BUFFALO', 'OTHER_LIVESTOCK',
-  'MILK', 'CURD', 'YOGURT', 'CHEESE',
-  'ORGANIC_FERTILIZER', 'CHEMICAL_FERTILIZER', 'COMPOST',
-  'TRACTOR', 'HARVESTER', 'TILLER', 'SPRAYER', 'OTHER_MACHINERY',
+  // Dairy
+  'MILK', 'CURD', 'YOGURT', 'CHEESE', 'OTHER_DAIRY',
+  // Fertilizers & Agro Chemicals
+  'ORGANIC_FERTILIZER', 'CHEMICAL_FERTILIZER', 'COMPOST', 'LIQUID_FERTILIZER', 'PESTICIDES', 'OTHER_AGRO_CHEMICALS',
+  // Machinery & Equipment
+  'TRACTOR', 'HARVESTER', 'TILLER', 'SPRAYER', 'WATER_PUMPS', 'OTHER_MACHINERY',
 ];
 
 export const SALE_TYPES: SaleType[] = ['WHOLESALE', 'RETAIL'];
@@ -234,7 +255,6 @@ export interface UpdateProfileRequest {
   bio?: string;
 }
 
-// Full admin-facing User entity (as returned by /api/admin/users*)
 export interface User {
   id: number;
   username: string;

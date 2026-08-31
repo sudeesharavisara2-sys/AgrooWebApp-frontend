@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { PRODUCT_CATEGORIES, PRODUCT_TYPES, SALE_TYPES, type ProductRequest } from '../../types';
+import { PRODUCT_CATEGORIES, PRODUCT_TYPES, SALE_TYPES, type ProductCategory, type ProductRequest, type ProductType } from '../../types';
 import { humanizeEnum } from '../../utils/helpers';
 import { 
   Package, 
-  DollarSign, 
   MapPin, 
   Phone, 
   Calendar, 
@@ -11,7 +10,8 @@ import {
   CheckCircle2, 
   Leaf, 
   Loader2,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 
 interface Props {
@@ -20,6 +20,34 @@ interface Props {
   allowImages?: boolean;
   onSubmit: (data: ProductRequest, images?: File[]) => Promise<void>;
 }
+
+// List of Sri Lankan districts
+const SRI_LANKAN_DISTRICTS = [
+  'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo',
+  'Galle', 'Gampaha', 'Hambantota', 'Jaffna', 'Kalutara',
+  'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar',
+  'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
+  'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
+];
+
+// ProductCategory අනුව අදාළ ProductTypes Map එක නිර්මාණය කිරීම
+const CATEGORY_TO_TYPES_MAP: Record<ProductCategory, ProductType[]> = {
+  FRESH_PRODUCE: [
+    'VEGETABLES', 'FRUITS', 'RICE', 'GRAINS', 'YAMS_AND_ROOTS', 'SPICES', 'SEEDLINGS', 'PLANTS_AND_FLOWERS', 'OTHER_CROPS'
+  ],
+  FERTILIZERS: [
+    'ORGANIC_FERTILIZER', 'CHEMICAL_FERTILIZER', 'COMPOST', 'LIQUID_FERTILIZER', 'PESTICIDES', 'OTHER_AGRO_CHEMICALS'
+  ],
+  LIVESTOCK: [
+    'CATTLE', 'CHICKEN', 'GOAT', 'PIG', 'BUFFALO', 'OTHER_LIVESTOCK'
+  ],
+  DAIRY_PRODUCTS: [
+    'MILK', 'CURD', 'YOGURT', 'CHEESE', 'OTHER_DAIRY'
+  ],
+  MACHINERY_RENTALS: [
+    'TRACTOR', 'HARVESTER', 'TILLER', 'SPRAYER', 'WATER_PUMPS', 'OTHER_MACHINERY'
+  ]
+};
 
 const emptyForm: ProductRequest = {
   name: '',
@@ -48,12 +76,63 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
   const update = <K extends keyof ProductRequest>(key: K, value: ProductRequest[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
+  // Category එක වෙනස් වන විට අදාළ Product Types ලබා ගැනීම සහ පළමුවැන්න Default ලෙස සැකසීම
+  const handleCategoryChange = (newCategory: ProductCategory) => {
+    const availableTypes = CATEGORY_TO_TYPES_MAP[newCategory] || PRODUCT_TYPES;
+    setForm((f) => ({
+      ...f,
+      category: newCategory,
+      productType: availableTypes[0] // නව Category එකට අදාළ පළමු Type එක තෝරයි
+    }));
+  };
+
+  // Function to handle phone fields allowing only numbers and a maximum of 10 digits
+  const handlePhoneChange = (key: 'contactPhone' | 'contactWhatsapp', value: string) => {
+    const cleanedValue = value.replace(/\D/g, '').slice(0, 10);
+    update(key, cleanedValue);
+  };
+
+  // Function to handle price and quantity fields allowing only positive numbers
+  const handleNumberChange = (key: 'price' | 'quantity', value: string) => {
+    if (value === '') {
+      update(key, 0);
+      return;
+    }
+    const num = Number(value);
+    if (!isNaN(num) && num >= 0) {
+      update(key, num);
+    }
+  };
+
+  // Function to append newly selected images to the existing image array
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setImages((prev) => [...prev, ...newFiles]);
+    }
+  };
+
+  // Function to remove an unwanted image from the preview list by index
+  const handleRemoveImage = (indexToRemove: number) => {
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Validate that contact phone numbers contain exactly 10 digits if provided
+    if (form.contactPhone && form.contactPhone.length !== 10) {
+      setError('Contact Phone must be exactly 10 digits.');
+      return;
+    }
+    if (form.contactWhatsapp && form.contactWhatsapp.length !== 10) {
+      setError('Contact WhatsApp must be exactly 10 digits.');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      // Backend එකට යැවීමට පෙර dates නිවැරදි ISO format එකට හැරවීම (Date Parse Error එක මඟහරවා ගැනීමට)
       const sanitizedData: ProductRequest = {
         ...form,
         harvestDate: form.harvestDate ? new Date(form.harvestDate).toISOString() : undefined,
@@ -67,6 +146,9 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
       setSubmitting(false);
     }
   };
+
+  // වත්මන් Category එකට අදාළ Product Types පමණක් පෙරළා ගැනීම (Filter)
+  const currentProductTypes = CATEGORY_TO_TYPES_MAP[form.category] || PRODUCT_TYPES;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-100 max-w-4xl mx-auto">
@@ -125,21 +207,22 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Price (Rs.) *</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                <DollarSign size={16} />
-              </span>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-9 pr-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                required
-                value={form.price}
-                onChange={(e) => update('price', Number(e.target.value))}
-              />
-            </div>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Cost per {form.unit || 'unit'} (Rs.) *
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              required
+              value={form.price === 0 ? '' : form.price}
+              onChange={(e) => handleNumberChange('price', e.target.value)}
+              placeholder="0.00"
+            />
+            <p className="text-[11px] text-emerald-600 font-medium mt-1">
+              * Enter the price for 1 {form.unit || 'unit'}
+            </p>
           </div>
 
           <div>
@@ -149,8 +232,9 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
               step="0.01"
               min="0"
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-              value={form.quantity}
-              onChange={(e) => update('quantity', Number(e.target.value))}
+              value={form.quantity === 0 ? '' : form.quantity}
+              onChange={(e) => handleNumberChange('quantity', e.target.value)}
+              placeholder="0.00"
             />
           </div>
 
@@ -171,7 +255,7 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
             <select
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               value={form.category}
-              onChange={(e) => update('category', e.target.value as ProductRequest['category'])}
+              onChange={(e) => handleCategoryChange(e.target.value as ProductCategory)}
             >
               {PRODUCT_CATEGORIES.map((c) => (
                 <option key={c} value={c}>{humanizeEnum(c)}</option>
@@ -184,9 +268,9 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
             <select
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               value={form.productType}
-              onChange={(e) => update('productType', e.target.value as ProductRequest['productType'])}
+              onChange={(e) => update('productType', e.target.value as ProductType)}
             >
-              {PRODUCT_TYPES.map((t) => (
+              {currentProductTypes.map((t) => (
                 <option key={t} value={t}>{humanizeEnum(t)}</option>
               ))}
             </select>
@@ -232,12 +316,16 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 mb-1">District</label>
-            <input
+            <select
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-              placeholder="e.g., Kandy"
               value={form.district}
               onChange={(e) => update('district', e.target.value)}
-            />
+            >
+              <option value="">Select District</option>
+              {SRI_LANKAN_DISTRICTS.map((district) => (
+                <option key={district} value={district}>{district}</option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -253,27 +341,31 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Contact Phone</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Contact Phone (10 Digits)</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                 <Phone size={16} />
               </span>
               <input
+                type="text"
+                maxLength={10}
                 className="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-9 pr-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 placeholder="07XXXXXXXX"
                 value={form.contactPhone}
-                onChange={(e) => update('contactPhone', e.target.value)}
+                onChange={(e) => handlePhoneChange('contactPhone', e.target.value)}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Contact WhatsApp</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Contact WhatsApp (10 Digits)</label>
             <input
+              type="text"
+              maxLength={10}
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm text-gray-800 transition-all focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               placeholder="07XXXXXXXX"
               value={form.contactWhatsapp}
-              onChange={(e) => update('contactWhatsapp', e.target.value)}
+              onChange={(e) => handlePhoneChange('contactWhatsapp', e.target.value)}
             />
           </div>
         </div>
@@ -342,9 +434,9 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
         </div>
       </div>
 
-      {/* Section 5: Image Upload */}
+      {/* Section 5: Image Upload & Previews */}
       {allowImages && (
-        <div className="space-y-2 pt-2">
+        <div className="space-y-4 pt-2">
           <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg w-fit">
             Product Images
           </h3>
@@ -360,14 +452,35 @@ const ProductForm: React.FC<Props> = ({ initial, submitLabel = 'Save Product', a
                 multiple
                 accept="image/*"
                 className="hidden"
-                onChange={(e) => setImages(Array.from(e.target.files || []))}
+                onChange={handleImageChange}
               />
             </label>
           </div>
+
+          {/* Uploaded Images Preview Grid with Remove Option */}
           {images.length > 0 && (
-            <p className="text-xs text-emerald-600 font-medium mt-1">
-              {images.length} image(s) selected successfully.
-            </p>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-gray-700">Selected Images ({images.length}):</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {images.map((file, index) => (
+                  <div key={index} className="relative group rounded-xl overflow-hidden border border-gray-200 bg-gray-50 aspect-square flex items-center justify-center">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 shadow-md opacity-80 hover:opacity-100 transition-all hover:scale-110"
+                      title="Remove image"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}

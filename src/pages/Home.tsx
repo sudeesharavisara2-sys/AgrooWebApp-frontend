@@ -37,15 +37,51 @@ const Home: React.FC = () => {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    Promise.all([productsApi.getAll({ page: 0, size: 6 }), machinesApi.getAvailable(0, 3)])
+ useEffect(() => {
+    // 1. මුලින්ම සියලුම ඩේටා ටික fetch කරගන්න (ලොකු size එකක් දාලා)
+    Promise.all([productsApi.getAll({ page: 0, size: 20 }), machinesApi.getAvailable(0, 20)])
       .then(([p, m]) => {
-        setProducts(p.content);
-        setMachines(m.content);
+        const allProducts = p.content;
+        const allMachines = m.content;
+
+        if (allProducts.length === 0 && allMachines.length === 0) return;
+
+        let currentIndex = 0;
+        const itemsPerPage = 4; // එක වාරයකට පෙන්වන card ගණන
+
+        // 2. තත්පර 4කට සැරයක් (4000ms) ස්වයංක්‍රීයව මාරු වන interval එක
+        const interval = setInterval(() => {
+          currentIndex = (currentIndex + itemsPerPage) >= Math.max(allProducts.length, allMachines.length) 
+            ? 0 
+            : currentIndex + itemsPerPage;
+
+          // Products ටික slice කරලා අලුත් කොටසක් දානවා
+          const nextProducts = allProducts.slice(currentIndex, currentIndex + itemsPerPage);
+          // ඩේටා මදි වුණොත් මුලින්ම පටන් ගන්න (infinite loop වගේ වැඩ කරන්න)
+          const finalProducts = nextProducts.length < itemsPerPage 
+            ? [...nextProducts, ...allProducts.slice(0, itemsPerPage - nextProducts.length)]
+            : nextProducts;
+
+          // Machines ටිකත් එහෙමමයි
+          const nextMachines = allMachines.slice(currentIndex, currentIndex + itemsPerPage);
+          const finalMachines = nextMachines.length < itemsPerPage 
+            ? [...nextMachines, ...allMachines.slice(0, itemsPerPage - nextMachines.length)]
+            : nextMachines;
+
+          setProducts(finalProducts);
+          setMachines(finalMachines);
+
+        }, 4000); // මෙතන 4000 කියන්නේ තත්පර 4යි. අවශ්‍ය නම් වැඩි හෝ අඩු කරන්න පුළුවන්.
+
+        // මුල් පාරට ඩේටා ටික දාලා පෙන්වන්න
+        setProducts(allProducts.slice(0, itemsPerPage));
+        setMachines(allMachines.slice(0, itemsPerPage));
+
+        return () => clearInterval(interval);
       })
       .finally(() => setLoading(false));
   }, []);
-
+  
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -65,7 +101,7 @@ const Home: React.FC = () => {
       </div>
 
 {/* =========================================================
-          MODERN GLASSMORPHISM NAVBAR (Background එකට ගැලපෙන විදිහට)
+          MODERN GLASSMORPHISM NAVBAR 
           ========================================================= */}
       <header className="sticky top-0 left-0 right-0 z-50 w-full bg-black/30 backdrop-blur-md border-b border-white/10 shadow-lg">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
