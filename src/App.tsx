@@ -53,16 +53,7 @@ const App: React.FC = () => {
     <Routes>
       {/* =========================================================
           AUTHENTICATION PAGES
-          No MainLayout / No Navbar
-
-          These pages have their own full-screen UI:
-          - Login
-          - Register
-          - Verify OTP
-          - Forgot Password
-          - Reset Password
       ========================================================= */}
-
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
@@ -70,17 +61,17 @@ const App: React.FC = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* =========================================================
-          MAIN APPLICATION
-          MainLayout contains the Navbar and Footer
-      ========================================================= */}
+          HOME PAGE (Without MainLayout / No Navbar & Footer)
+          ========================================================= */}
+      <Route path="/" element={<Home />} />
 
+      {/* =========================================================
+          MAIN APPLICATION (With MainLayout / Navbar & Footer)
+      ========================================================= */}
       <Route element={<MainLayout />}>
         {/* ---------------------------------------------------------
-            Public
+            Public (Other than Home)
         --------------------------------------------------------- */}
-
-        <Route path="/" element={<Home />} />
-
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetail />} />
 
@@ -100,7 +91,6 @@ const App: React.FC = () => {
         {/* ---------------------------------------------------------
             Authenticated Users
         --------------------------------------------------------- */}
-
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
 
@@ -167,7 +157,6 @@ const App: React.FC = () => {
         {/* ---------------------------------------------------------
             Admin Only
         --------------------------------------------------------- */}
-
         <Route element={<AdminRoute />}>
           <Route
             path="/admin"
@@ -203,7 +192,6 @@ const App: React.FC = () => {
         {/* ---------------------------------------------------------
             404
         --------------------------------------------------------- */}
-
         <Route
           path="/404"
           element={<NotFound />}

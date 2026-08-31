@@ -4,8 +4,22 @@ import type { ApiError } from '../api/client';
 /** Resolves a relative image path returned by the backend to an absolute URL. */
 export function resolveImageUrl(url?: string | null): string | null {
   if (!url) return null;
-  if (url.startsWith('http')) return url;
-  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  // Remove leading slashes if any
+  const cleanPath = url.startsWith('/') ? url.substring(1) : url;
+
+  // If API_BASE_URL already ends with /uploads or cleanPath starts with uploads
+  // Let's ensure we return a clean http://localhost:8081/uploads/... format
+  const baseUrlWithoutUploads = API_BASE_URL.replace(/\/uploads\/?$/, '');
+
+  if (cleanPath.startsWith('uploads/')) {
+    return `${baseUrlWithoutUploads}/${cleanPath}`;
+  }
+
+  return `${baseUrlWithoutUploads}/uploads/${cleanPath}`;
 }
 
 export function formatDate(value?: string | null): string {

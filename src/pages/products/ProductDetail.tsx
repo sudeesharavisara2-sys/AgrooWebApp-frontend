@@ -72,7 +72,7 @@ const ProductDetail: React.FC = () => {
             <div className="flex h-full w-full items-center justify-center text-5xl">🌱</div>
           )}
         </div>
-        {product.images.length > 1 && (
+        {product.images && product.images.length > 1 && (
           <div className="flex gap-2 overflow-x-auto">
             {product.images.map((img) => (
               <button
