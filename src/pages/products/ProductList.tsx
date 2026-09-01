@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { productsApi } from '../../api/products';
-import ProductCard from '../../components/products/ProductCard';
 import Loader from '../../components/common/Loader';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import EmptyState from '../../components/common/EmptyState';
 import Pagination from '../../components/common/Pagination';
 import { useAuth } from '../../context/AuthContext';
 import { PRODUCT_CATEGORIES, type Page, type ProductResponse } from '../../types';
-import { getErrorMessage, humanizeEnum } from '../../utils/helpers';
+import { getErrorMessage, humanizeEnum, resolveImageUrl } from '../../utils/helpers';
 
 const ProductList: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -109,11 +108,59 @@ const ProductList: React.FC = () => {
         <EmptyState title="No products found" subtitle="Try a different search or category." />
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {list.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((p) => {
+              // ProductDetail එකේ වගේම primary image එක හෝ පළමු image එක තෝරා ගැනීම
+              const primaryImg = p.images?.find((i) => i.isPrimary) || p.images?.[0];
+              const imageUrl = primaryImg ? resolveImageUrl(primaryImg.imageUrl) : null;
+
+              return (
+                <Link
+                  key={p.id}
+                  to={`/products/${p.id}`}
+                  className="flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
+                >
+                  {/* Product Image Box */}
+                  <div className="h-48 w-full bg-gray-50 overflow-hidden flex items-center justify-center p-2">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={p.name}
+                        className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-4xl">🌱</div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex flex-col flex-1 p-4">
+                    <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-1">
+                      {p.name}
+                    </h3>
+
+                    {/* Price */}
+                    <div className="text-lg font-bold text-gray-950 mb-3">
+                      Rs. {p.price?.toLocaleString()}
+                    </div>
+
+                    {/* Badges */}
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-md font-medium">
+                        {humanizeEnum(p.category)}
+                      </span>
+                      {p.listingType && (
+                        <span className="px-2 py-0.5 text-xs bg-green-50 text-green-700 rounded-md font-medium">
+                          {humanizeEnum(p.listingType)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
+
           {!searchResults && data && (
             <Pagination page={data.number} totalPages={data.totalPages} onChange={setPage} />
           )}
