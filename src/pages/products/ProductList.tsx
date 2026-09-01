@@ -8,6 +8,7 @@ import Pagination from '../../components/common/Pagination';
 import { useAuth } from '../../context/AuthContext';
 import { PRODUCT_CATEGORIES, type Page, type ProductResponse } from '../../types';
 import { getErrorMessage, humanizeEnum, resolveImageUrl } from '../../utils/helpers';
+import { Search } from 'lucide-react';
 
 const ProductList: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -74,15 +75,21 @@ const ProductList: React.FC = () => {
       <div className="flex flex-wrap gap-3">
         <form onSubmit={handleSearch} className="flex flex-1 min-w-[200px] gap-2">
           <input
-            className="input"
+            className="input flex-1"
             placeholder="Search products..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
-          <button className="btn-secondary shrink-0" type="submit">
-            Search
+          
+          {/* Modern Search Button */}
+          <button 
+            type="submit" 
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-agroo-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-agroo-700 transition-all active:scale-95 shrink-0"
+          >
+            <Search size={16} /> Search
           </button>
         </form>
+
         <select
           className="input w-auto"
           value={category}
@@ -110,7 +117,6 @@ const ProductList: React.FC = () => {
         <>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {list.map((p) => {
-              // ProductDetail එකේ වගේම primary image එක හෝ පළමු image එක තෝරා ගැනීම
               const primaryImg = p.images?.find((i) => i.isPrimary) || p.images?.[0];
               const imageUrl = primaryImg ? resolveImageUrl(primaryImg.imageUrl) : null;
 

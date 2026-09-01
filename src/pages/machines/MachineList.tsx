@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { machinesApi } from '../../api/machines';
-import MachineCard from '../../components/machines/MachineCard';
 import Loader from '../../components/common/Loader';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import EmptyState from '../../components/common/EmptyState';
 import Pagination from '../../components/common/Pagination';
 import { useAuth } from '../../context/AuthContext';
 import { MACHINE_TYPES, type MachineRentalResponse, type MachineType, type Page } from '../../types';
-import { getErrorMessage, humanizeEnum } from '../../utils/helpers';
+import { getErrorMessage, humanizeEnum, resolveImageUrl } from '../../utils/helpers';
+import { MapPin, Search } from 'lucide-react';
 
 const MachineList: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -90,8 +90,13 @@ const MachineList: React.FC = () => {
             </option>
           ))}
         </select>
-        <button type="submit" className="btn-secondary">
-          Search
+        
+        {/* Modern Search Button */}
+        <button 
+          type="submit" 
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-agroo-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-agroo-700 transition-all active:scale-95"
+        >
+          <Search size={16} /> Search
         </button>
       </form>
 
@@ -103,11 +108,63 @@ const MachineList: React.FC = () => {
         <EmptyState title="No machines found" subtitle="Try a different search or type." />
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {data?.content.map((m) => (
-              <MachineCard key={m.id} machine={m} />
-            ))}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {data?.content.map((m) => {
+              const primaryImg = m.images?.find((i) => i.isPrimary) || m.images?.[0];
+              const imageUrl = primaryImg ? resolveImageUrl(primaryImg.imageUrl) : null;
+
+              return (
+                <Link
+                  key={m.id}
+                  to={`/machines/${m.id}`}
+                  className="flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden group"
+                >
+                  {/* Machine Image Box */}
+                  <div className="h-48 w-full bg-gray-50 overflow-hidden flex items-center justify-center p-2">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={m.name}
+                        className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-4xl">🚜</div>
+                    )}
+                  </div>
+
+                  {/* Machine Info */}
+                  <div className="flex flex-col flex-1 p-4">
+                    <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-1">
+                      {m.name}
+                    </h3>
+
+                    {/* Price */}
+                    <div className="text-lg font-bold text-gray-950 mb-2">
+                      Rs. {m.pricePerDay?.toLocaleString()} <span className="text-xs font-normal text-gray-500">/ day</span>
+                    </div>
+
+                    {/* Location */}
+                    {m.location && (
+                      <p className="text-xs text-gray-500 flex items-center gap-1 mb-3">
+                        <MapPin size={13} className="text-gray-400 shrink-0" />
+                        {m.location}
+                      </p>
+                    )}
+
+                    {/* Badges */}
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {m.machineType && (
+                        <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-md font-medium">
+                          {humanizeEnum(m.machineType)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
+
           {data && <Pagination page={data.number} totalPages={data.totalPages} onChange={setPage} />}
         </>
       )}
