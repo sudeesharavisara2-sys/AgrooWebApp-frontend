@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LogOut, User, ChevronDown, Sprout } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -13,6 +13,7 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
@@ -24,16 +25,18 @@ const Navbar: React.FC = () => {
     setOpen(false);
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-4">
       <div
         className="
           mx-auto flex max-w-6xl items-center justify-between
-          rounded-2xl border border-white/20
-          bg-emerald-950/40 px-4 py-3
-          shadow-[0_8px_32px_rgba(0,0,0,0.37)]
+          rounded-2xl border border-agroo-600/20
+          bg-white/80 px-4 py-3
+          shadow-[0_8px_32px_rgba(0,0,0,0.1)]
           backdrop-blur-xl
-          supports-[backdrop-filter]:bg-emerald-950/30
+          supports-[backdrop-filter]:bg-white/60
           md:px-6
         "
       >
@@ -41,13 +44,13 @@ const Navbar: React.FC = () => {
         <Link
           to="/"
           onClick={closeMenu}
-          className="group flex items-center gap-2.5 text-white"
+          className="group flex items-center gap-2.5 text-gray-900"
         >
           <div
             className="
               flex h-10 w-10 items-center justify-center
-              rounded-xl border border-white/20
-              bg-emerald-600 text-white
+              rounded-xl border border-agroo-600/20
+              bg-agroo-600 text-white
               shadow-md backdrop-blur-md
               transition-transform duration-200
               group-hover:scale-105
@@ -56,7 +59,7 @@ const Navbar: React.FC = () => {
             <Sprout size={20} />
           </div>
 
-          <span className="text-xl font-black tracking-wider text-white">
+          <span className="text-xl font-black tracking-wider text-agroo-700">
             Agroo
           </span>
         </Link>
@@ -65,52 +68,58 @@ const Navbar: React.FC = () => {
         <nav
           className="
             hidden items-center gap-1
-            rounded-2xl border border-white/15
-            bg-white/10 p-1.5
+            rounded-2xl border border-gray-200
+            bg-gray-100/80 p-1.5
             shadow-sm backdrop-blur-lg
             md:flex
           "
         >
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="
-                rounded-xl px-4 py-2
-                text-xs font-semibold text-emerald-100/80
-                transition-all duration-200
-                hover:bg-white/20 hover:text-white
-                hover:shadow-sm
-              "
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = isActive(link.to);
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`
+                  rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
+                  ${
+                    active
+                      ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
+                      : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
+                  }
+                `}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           {isAuthenticated && (
             <>
               <Link
                 to="/feed"
-                className="
-                  rounded-xl px-4 py-2
-                  text-xs font-semibold text-emerald-100/80
-                  transition-all duration-200
-                  hover:bg-white/20 hover:text-white
-                  hover:shadow-sm
-                "
+                className={`
+                  rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
+                  ${
+                    isActive('/feed')
+                      ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
+                      : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
+                  }
+                `}
               >
                 My Feed
               </Link>
 
               <Link
                 to="/chat"
-                className="
-                  rounded-xl px-4 py-2
-                  text-xs font-semibold text-emerald-100/80
-                  transition-all duration-200
-                  hover:bg-white/20 hover:text-white
-                  hover:shadow-sm
-                "
+                className={`
+                  rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
+                  ${
+                    isActive('/chat')
+                      ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
+                      : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
+                  }
+                `}
               >
                 Chat
               </Link>
@@ -120,12 +129,14 @@ const Navbar: React.FC = () => {
           {isAdmin && (
             <Link
               to="/admin"
-              className="
-                rounded-xl px-4 py-2
-                text-xs font-bold text-emerald-300
-                transition-all duration-200
-                hover:bg-emerald-500/20 hover:text-white
-              "
+              className={`
+                rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200
+                ${
+                  isActive('/admin')
+                    ? 'bg-agroo-700 text-white shadow-md scale-[1.02]'
+                    : 'text-agroo-700 hover:bg-agroo-100 hover:text-agroo-900'
+                }
+              `}
             >
               Admin
             </Link>
@@ -138,21 +149,20 @@ const Navbar: React.FC = () => {
             <>
               <Link
                 to="/profile"
-                className="
-                  flex items-center gap-2
-                  rounded-xl border border-white/20
-                  bg-white/10 px-3 py-2
-                  text-xs font-medium text-white
-                  shadow-sm backdrop-blur-md
-                  transition-all duration-200
-                  hover:bg-white/20 hover:text-emerald-200
-                "
+                className={`
+                  flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium shadow-sm backdrop-blur-md transition-all duration-200
+                  ${
+                    isActive('/profile')
+                      ? 'border-agroo-600 bg-agroo-600 text-white font-bold shadow-md'
+                      : 'border-gray-200 bg-gray-100 text-gray-800 hover:bg-gray-200 hover:text-agroo-700'
+                  }
+                `}
               >
                 <div
-                  className="
-                    flex h-7 w-7 items-center justify-center
-                    rounded-lg bg-emerald-500/20 text-emerald-300
-                  "
+                  className={`
+                    flex h-7 w-7 items-center justify-center rounded-lg transition-colors
+                    ${isActive('/profile') ? 'bg-white/20 text-white' : 'bg-agroo-100 text-agroo-700'}
+                  `}
                 >
                   <User size={14} />
                 </div>
@@ -161,16 +171,16 @@ const Navbar: React.FC = () => {
                   {user?.fullName || user?.username}
                 </span>
 
-                <ChevronDown size={14} className="text-emerald-300/70" />
+                <ChevronDown size={14} className={isActive('/profile') ? 'text-white/80' : 'text-gray-500'} />
               </Link>
 
               <button
                 className="
                   flex h-10 w-10 items-center justify-center
-                  rounded-xl border border-red-500/30
-                  bg-red-500/10 text-red-400
+                  rounded-xl border border-red-200
+                  bg-red-50 text-red-600
                   transition-all duration-200
-                  hover:bg-red-500/20 hover:text-red-300
+                  hover:bg-red-100 hover:text-red-700
                   active:scale-95 cursor-pointer
                 "
                 onClick={handleLogout}
@@ -184,28 +194,14 @@ const Navbar: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="
-                  rounded-xl border border-white/20
-                  bg-white/10 px-4 py-2
-                  text-xs font-semibold text-white
-                  shadow-sm backdrop-blur-md
-                  transition-all duration-200
-                  hover:bg-white/20
-                "
+                className="btn-outline text-xs px-4 py-2"
               >
                 Log in
               </Link>
 
               <Link
                 to="/register"
-                className="
-                  rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-2
-                  text-xs font-bold text-emerald-950
-                  shadow-md shadow-emerald-500/20
-                  transition-all duration-200
-                  hover:from-emerald-400 hover:to-teal-300 hover:shadow-lg
-                  active:scale-95
-                "
+                className="btn-primary text-xs px-4 py-2"
               >
                 Sign up
               </Link>
@@ -217,11 +213,11 @@ const Navbar: React.FC = () => {
         <button
           className="
             flex h-10 w-10 items-center justify-center
-            rounded-xl border border-white/20
-            bg-white/10 text-white
+            rounded-xl border border-gray-200
+            bg-gray-100 text-gray-800
             shadow-sm backdrop-blur-md
             transition-all duration-200
-            hover:bg-white/20
+            hover:bg-gray-200
             active:scale-95
             md:hidden
           "
@@ -239,56 +235,69 @@ const Navbar: React.FC = () => {
           className="
             mx-auto mt-2 max-w-6xl
             overflow-hidden rounded-2xl
-            border border-white/20
-            bg-emerald-950/80 p-3
-            shadow-[0_12px_40px_rgba(0,0,0,0.5)]
+            border border-gray-200
+            bg-white p-3
+            shadow-[0_12px_40px_rgba(0,0,0,0.15)]
             backdrop-blur-2xl
+            animate-slide-fade
             md:hidden
           "
         >
           <nav className="flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={closeMenu}
-                className="
-                  rounded-xl px-4 py-3
-                  text-xs font-semibold text-emerald-100/90
-                  transition-all duration-200
-                  hover:bg-white/15 hover:text-white
-                "
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isActive(link.to);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={closeMenu}
+                  className={`
+                    rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
+                    ${
+                      active
+                        ? 'bg-agroo-600 text-white font-bold shadow-sm'
+                        : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
+                    }
+                  `}
+                >
+                  <span>{link.label}</span>
+                  {active && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
+                </Link>
+              );
+            })}
 
             {isAuthenticated && (
               <>
                 <Link
                   to="/feed"
                   onClick={closeMenu}
-                  className="
-                    rounded-xl px-4 py-3
-                    text-xs font-semibold text-emerald-100/90
-                    transition-all duration-200
-                    hover:bg-white/15 hover:text-white
-                  "
+                  className={`
+                    rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
+                    ${
+                      isActive('/feed')
+                        ? 'bg-agroo-600 text-white font-bold shadow-sm'
+                        : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
+                    }
+                  `}
                 >
-                  My Feed
+                  <span>My Feed</span>
+                  {isActive('/feed') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
                 </Link>
 
                 <Link
                   to="/chat"
                   onClick={closeMenu}
-                  className="
-                    rounded-xl px-4 py-3
-                    text-xs font-semibold text-emerald-100/90
-                    transition-all duration-200
-                    hover:bg-white/15 hover:text-white
-                  "
+                  className={`
+                    rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
+                    ${
+                      isActive('/chat')
+                        ? 'bg-agroo-600 text-white font-bold shadow-sm'
+                        : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
+                    }
+                  `}
                 >
-                  Chat
+                  <span>Chat</span>
+                  {isActive('/chat') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
                 </Link>
               </>
             )}
@@ -297,62 +306,69 @@ const Navbar: React.FC = () => {
               <Link
                 to="/admin"
                 onClick={closeMenu}
-                className="
-                  rounded-xl px-4 py-3
-                  text-xs font-bold text-emerald-300
-                  transition-all duration-200
-                  hover:bg-emerald-500/20 hover:text-white
-                "
+                className={`
+                  rounded-xl px-4 py-3 text-xs font-bold transition-all duration-200 flex items-center justify-between
+                  ${
+                    isActive('/admin')
+                      ? 'bg-agroo-700 text-white shadow-sm'
+                      : 'text-agroo-700 hover:bg-agroo-50'
+                  }
+                `}
               >
-                Admin
+                <span>Admin</span>
+                {isActive('/admin') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
               </Link>
             )}
 
-            <div className="my-2 h-px bg-white/10" />
+            <div className="my-2 h-px bg-gray-200" />
 
             {isAuthenticated ? (
               <>
                 <Link
                   to="/profile"
                   onClick={closeMenu}
-                  className="
-                    flex items-center gap-3
-                    rounded-xl bg-white/10 px-4 py-3
-                    text-xs font-medium text-white
-                    transition-all duration-200
-                    hover:bg-white/20
-                  "
+                  className={`
+                    flex items-center justify-between rounded-xl border px-4 py-3 text-xs font-medium transition-all duration-200
+                    ${
+                      isActive('/profile')
+                        ? 'border-agroo-600 bg-agroo-600 text-white font-bold shadow-sm'
+                        : 'border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100'
+                    }
+                  `}
                 >
-                  <div
-                    className="
-                      flex h-9 w-9 items-center justify-center
-                      rounded-xl bg-emerald-500/20 text-emerald-300
-                    "
-                  >
-                    <User size={16} />
-                  </div>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`
+                        flex h-9 w-9 items-center justify-center rounded-xl
+                        ${isActive('/profile') ? 'bg-white/20 text-white' : 'bg-agroo-100 text-agroo-700'}
+                      `}
+                    >
+                      <User size={16} />
+                    </div>
 
-                  <div className="flex flex-col">
-                    <span>
-                      {user?.fullName || user?.username || 'Profile'}
-                    </span>
-
-                    {user?.username && user?.fullName && (
-                      <span className="text-[10px] font-normal text-emerald-300/60">
-                        @{user.username}
+                    <div className="flex flex-col">
+                      <span>
+                        {user?.fullName || user?.username || 'Profile'}
                       </span>
-                    )}
+
+                      {user?.username && user?.fullName && (
+                        <span className={`text-[10px] font-normal ${isActive('/profile') ? 'text-white/80' : 'text-gray-500'}`}>
+                          @{user.username}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  {isActive('/profile') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
                 </Link>
 
                 <button
                   className="
                     mt-1 flex w-full items-center justify-center gap-2
-                    rounded-xl border border-red-500/30
-                    bg-red-500/10 px-4 py-3
-                    text-xs font-semibold text-red-400
+                    rounded-xl border border-red-200
+                    bg-red-50 px-4 py-3
+                    text-xs font-semibold text-red-600
                     transition-all duration-200
-                    hover:bg-red-500/20 hover:text-red-300
+                    hover:bg-red-100 hover:text-red-700
                     active:scale-[0.98] cursor-pointer
                   "
                   onClick={handleLogout}
@@ -366,14 +382,7 @@ const Navbar: React.FC = () => {
                 <Link
                   to="/login"
                   onClick={closeMenu}
-                  className="
-                    flex items-center justify-center
-                    rounded-xl border border-white/20
-                    bg-white/10 px-4 py-3
-                    text-xs font-semibold text-white
-                    transition-all duration-200
-                    hover:bg-white/20
-                  "
+                  className="btn-outline w-full justify-center py-3 text-xs"
                 >
                   Log in
                 </Link>
@@ -381,15 +390,7 @@ const Navbar: React.FC = () => {
                 <Link
                   to="/register"
                   onClick={closeMenu}
-                  className="
-                    flex items-center justify-center
-                    rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-3
-                    text-xs font-bold text-emerald-950
-                    shadow-md shadow-emerald-500/20
-                    transition-all duration-200
-                    hover:from-emerald-400 hover:to-teal-300
-                    active:scale-[0.98]
-                  "
+                  className="btn-primary w-full justify-center py-3 text-xs"
                 >
                   Create account
                 </Link>
