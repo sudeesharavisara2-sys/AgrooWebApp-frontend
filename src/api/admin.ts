@@ -123,6 +123,11 @@ export const adminApi = {
       .delete<{ success: string; message: string }>(`/api/admin/products/${productId}`)
       .then((r) => r.data),
 
+  deleteMachine: (machineId: number) =>
+    apiClient
+      .delete<{ success: string; message: string }>(`/api/admin/machines/${machineId}`)
+      .then((r) => r.data),
+
   deletePost: (postId: number) =>
     apiClient
       .delete<{ success: string; message: string }>(`/api/admin/posts/${postId}`)
