@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { machinesApi } from '../../api/machines';
+import { adminApi } from '../../api/admin';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../../components/common/Loader';
 import ErrorAlert from '../../components/common/ErrorAlert';
@@ -57,12 +58,18 @@ const MachineDetail: React.FC = () => {
   if (error) return <ErrorAlert message={error} />;
   if (!machine) return null;
 
+  const isAdmin = user?.role === 'ADMIN';
   const isOwner = user?.username === machine.owner.username;
+  const canManage = isOwner || isAdmin;
 
   const handleDelete = async () => {
     if (!confirm('Delete this machine listing?')) return;
     try {
-      await machinesApi.delete(machine.id);
+      if (isAdmin && !isOwner) {
+        await adminApi.deleteMachine(machine.id);
+      } else {
+        await machinesApi.delete(machine.id);
+      }
       navigate('/machines');
     } catch (err) {
       setError(getErrorMessage(err));
@@ -90,7 +97,7 @@ const MachineDetail: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 items-start">
         
-        {/* Left Column: Images Section, Features, & Owner Action Buttons */}
+        {/* Left Column: Images Section, Features, & Action Buttons */}
         <div className="space-y-6 lg:sticky lg:top-6">
           
           {/* Main Image Box */}
@@ -134,7 +141,7 @@ const MachineDetail: React.FC = () => {
             </div>
           )}
 
-          {/* Features & Attachments (Moved to Left Column) */}
+          {/* Features & Attachments */}
           {machine.features && machine.features.length > 0 && (
             <div className="card space-y-2">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -150,33 +157,37 @@ const MachineDetail: React.FC = () => {
             </div>
           )}
 
-          {/* Owner Action Buttons */}
-          {isOwner && (
+          {/* Owner/Admin Action Buttons */}
+          {canManage && (
             <div className="card bg-gray-50/50 border-gray-200 flex flex-wrap items-center gap-2.5">
-              <Link 
-                to={`/machines/${machine.id}/edit`} 
-                className="btn-secondary bg-white hover:bg-gray-100 text-xs shadow-sm border border-gray-200"
-              >
-                <Edit3 size={14} className="mr-1.5 text-gray-600" /> Edit Listing
-              </Link>
-              
-              <button 
-                onClick={handleToggle} 
-                className={`btn-secondary text-xs shadow-sm border ${
-                  machine.isAvailable 
-                    ? 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100' 
-                    : 'bg-green-50 text-green-800 border-green-200 hover:bg-green-100'
-                }`}
-              >
-                {machine.isAvailable ? <EyeOff size={14} className="mr-1.5 text-amber-600" /> : <Eye size={14} className="mr-1.5 text-green-600" />}
-                {machine.isAvailable ? 'Mark Unavailable' : 'Mark Available'}
-              </button>
+              {isOwner && (
+                <>
+                  <Link 
+                    to={`/machines/${machine.id}/edit`} 
+                    className="btn-secondary bg-white hover:bg-gray-100 text-xs shadow-sm border border-gray-200"
+                  >
+                    <Edit3 size={14} className="mr-1.5 text-gray-600" /> Edit Listing
+                  </Link>
+                  
+                  <button 
+                    onClick={handleToggle} 
+                    className={`btn-secondary text-xs shadow-sm border ${
+                      machine.isAvailable 
+                        ? 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100' 
+                        : 'bg-green-50 text-green-800 border-green-200 hover:bg-green-100'
+                    }`}
+                  >
+                    {machine.isAvailable ? <EyeOff size={14} className="mr-1.5 text-amber-600" /> : <Eye size={14} className="mr-1.5 text-green-600" />}
+                    {machine.isAvailable ? 'Mark Unavailable' : 'Mark Available'}
+                  </button>
+                </>
+              )}
 
               <button 
                 onClick={handleDelete} 
                 className="btn-danger text-xs ml-auto shadow-sm"
               >
-                <Trash2 size={14} className="mr-1.5" /> Delete
+                <Trash2 size={14} className="mr-1.5" /> {isAdmin && !isOwner ? 'Admin Delete' : 'Delete'}
               </button>
             </div>
           )}
