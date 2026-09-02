@@ -143,9 +143,7 @@ const Home: React.FC = () => {
 
             {isAuthenticated && (
               <>
-                <Link to="/feed" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                  My Feed
-                </Link>
+                
                 <Link to="/chat" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   Chat
                 </Link>
