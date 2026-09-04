@@ -143,9 +143,7 @@ const Home: React.FC = () => {
 
             {isAuthenticated && (
               <>
-                <Link to="/feed" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                  My Feed
-                </Link>
+                
                 <Link to="/chat" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   Chat
                 </Link>
@@ -359,8 +357,7 @@ const Home: React.FC = () => {
           )}
         </div>
       </section>
-
-      {/* =========================================================
+{/* =========================================================
           4. ABOUT US SECTION
           ========================================================= */}
       <section id="about" className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white m-0 p-0">
@@ -374,46 +371,92 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20 py-28 sm:py-36 lg:py-44 flex flex-col items-center justify-center">
+          
+          {/* Main Title & Description */}
           <div className="text-center max-w-3xl mx-auto space-y-6">
             <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 bg-emerald-900/60 border border-emerald-500/30 rounded-full backdrop-blur-md">
                About Agroo
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight drop-shadow-md">
-              Empowering Sri Lankan Farming Communities
+              🌾 Agroo - Empowering Sri Lankan Farming Communities
             </h2>
+            <p className="text-base sm:text-xl font-semibold text-emerald-400 drop-shadow">
+              Bridging Farmers, Technology, and Sustainable Agriculture
+            </p>
             <p className="text-base sm:text-lg text-gray-200 leading-relaxed drop-shadow">
-              Agroo is designed to bridge the gap between local farmers, buyers, and modern technology. We provide a trusted digital space to buy fresh harvest, rent necessary agricultural machinery, and uplift rural livelihoods.
+              Agroo is a comprehensive digital platform designed to bridge the gap between local farmers, buyers, and modern agricultural technology. We provide a trusted space to buy fresh harvest, rent machinery, share knowledge, and uplift rural livelihoods across Sri Lanka.
             </p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3 w-full max-w-7xl">
-            <div className="p-8 text-center space-y-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                <Sprout size={28} />
-              </div>
-              <h3 className="font-bold text-lg text-white">100% Fresh Produce</h3>
-              <p className="text-xs text-gray-200 leading-relaxed">Directly sourced from trusted local farmers across different districts of Sri Lanka.</p>
+          {/* Mission & Vision Cards */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
+            <div className="p-6 text-left rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl">
+              <h3 className="text-xl font-bold text-emerald-300 mb-2">Our Mission</h3>
+              <p className="text-sm text-gray-200 leading-relaxed">
+                Our mission is to empower Sri Lankan farmers with digital tools that increase market access, improve productivity, and build resilient agricultural communities. We believe in connecting people, sharing knowledge, and growing together.
+              </p>
             </div>
 
-            <div className="p-8 text-center space-y-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                <Users size={28} />
-              </div>
-              <h3 className="font-bold text-lg text-white">Connected Community</h3>
-              <p className="text-xs text-gray-200 leading-relaxed">A powerful network allowing farmers, renters, and buyers to communicate seamlessly.</p>
-            </div>
-
-            <div className="p-8 text-center space-y-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                <ShieldCheck size={28} />
-              </div>
-              <h3 className="font-bold text-lg text-white">Secure & Reliable</h3>
-              <p className="text-xs text-gray-200 leading-relaxed">Safe authentication and transparent listings ensuring a trustworthy trading experience.</p>
+            <div className="p-6 text-left rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl">
+              <h3 className="text-xl font-bold text-emerald-300 mb-2">Our Vision</h3>
+              <p className="text-sm text-gray-200 leading-relaxed">
+                To become the leading agricultural ecosystem in Sri Lanka, where every farmer has access to technology, markets, and a supportive community to thrive.
+              </p>
             </div>
           </div>
+
+          {/* Key Capabilities (What you can do with Agroo) */}
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 w-full max-w-7xl">
+            
+            {/* 1. Products Marketplace */}
+            <div className="p-6 text-center space-y-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <Sprout size={24} />
+              </div>
+              <h3 className="font-bold text-lg text-white">Buy & Sell Fresh Produce</h3>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                Direct marketplace connecting local farmers with buyers for retail and wholesale fresh organic produce with transparent pricing.
+              </p>
+            </div>
+
+            {/* 2. Machinery Rentals */}
+            <div className="p-6 text-center space-y-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <ShieldCheck size={24} />
+              </div>
+              <h3 className="font-bold text-lg text-white">Agricultural Machinery Rentals</h3>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                Rent essential farming equipment like 4WD tractors, seeders, heavy-duty plows, and sprayers at affordable daily rates.
+              </p>
+            </div>
+
+            {/* 3. Community & Social Feed */}
+            <div className="p-6 text-center space-y-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <Users size={24} />
+              </div>
+              <h3 className="font-bold text-lg text-white">Farmer Community & Social Feed</h3>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                Share agricultural experiences, ask questions, post farming tips, and collaborate through an interactive social network.
+              </p>
+            </div>
+
+            {/* 4. Real-time Chat & Price Tracking */}
+            <div className="p-6 text-center space-y-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl transition-all hover:bg-white/20 hover:-translate-y-1">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <MessageSquare size={24} />
+              </div>
+              <h3 className="font-bold text-lg text-white">Real-Time Chat & Market Insights</h3>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                Instantly message buyers and renters directly while tracking daily crop market prices from major Sri Lankan economic centers.
+              </p>
+            </div>
+
+          </div>
+
         </div>
       </section>
-
+      
       {/* =========================================================
           5. CONTACT US SECTION
           ========================================================= */}

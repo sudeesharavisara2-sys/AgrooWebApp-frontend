@@ -95,35 +95,19 @@ const Navbar: React.FC = () => {
           })}
 
           {isAuthenticated && (
-            <>
-              <Link
-                to="/feed"
-                className={`
-                  rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
-                  ${
-                    isActive('/feed')
-                      ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
-                      : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
-                  }
-                `}
-              >
-                My Feed
-              </Link>
-
-              <Link
-                to="/chat"
-                className={`
-                  rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
-                  ${
-                    isActive('/chat')
-                      ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
-                      : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
-                  }
-                `}
-              >
-                Chat
-              </Link>
-            </>
+            <Link
+              to="/chat"
+              className={`
+                rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
+                ${
+                  isActive('/chat')
+                    ? 'bg-agroo-600 text-white shadow-md font-bold scale-[1.02]'
+                    : 'text-gray-700 hover:bg-white hover:text-agroo-700 hover:shadow-sm'
+                }
+              `}
+            >
+              Chat
+            </Link>
           )}
 
           {isAdmin && (
@@ -267,39 +251,21 @@ const Navbar: React.FC = () => {
             })}
 
             {isAuthenticated && (
-              <>
-                <Link
-                  to="/feed"
-                  onClick={closeMenu}
-                  className={`
-                    rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
-                    ${
-                      isActive('/feed')
-                        ? 'bg-agroo-600 text-white font-bold shadow-sm'
-                        : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
-                    }
-                  `}
-                >
-                  <span>My Feed</span>
-                  {isActive('/feed') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
-                </Link>
-
-                <Link
-                  to="/chat"
-                  onClick={closeMenu}
-                  className={`
-                    rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
-                    ${
-                      isActive('/chat')
-                        ? 'bg-agroo-600 text-white font-bold shadow-sm'
-                        : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
-                    }
-                  `}
-                >
-                  <span>Chat</span>
-                  {isActive('/chat') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
-                </Link>
-              </>
+              <Link
+                to="/chat"
+                onClick={closeMenu}
+                className={`
+                  rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
+                  ${
+                    isActive('/chat')
+                      ? 'bg-agroo-600 text-white font-bold shadow-sm'
+                      : 'text-gray-700 hover:bg-agroo-50 hover:text-agroo-700'
+                  }
+                `}
+              >
+                <span>Chat</span>
+                {isActive('/chat') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
+              </Link>
             )}
 
             {isAdmin && (
