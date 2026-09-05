@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, User, ChevronDown, Sprout } from 'lucide-react';
+import { Menu, X, LogOut, User, ChevronDown, Sprout, Bot } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const navLinks = [
@@ -93,6 +93,22 @@ const Navbar: React.FC = () => {
               </Link>
             );
           })}
+
+          {/* AI Chatbot Button */}
+          <Link
+            to="/ai-chat"
+            className={`
+              flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200
+              ${
+                isActive('/ai-chat')
+                  ? 'bg-green-600 text-white shadow-md font-bold scale-[1.02]'
+                  : 'bg-green-50 text-green-700 border border-green-200/50 hover:bg-green-100 hover:shadow-sm'
+              }
+            `}
+          >
+            <Bot size={14} />
+            AI Assistant
+          </Link>
 
           {isAuthenticated && (
             <Link
@@ -249,6 +265,26 @@ const Navbar: React.FC = () => {
                 </Link>
               );
             })}
+
+            {/* Mobile AI Chatbot Button */}
+            <Link
+              to="/ai-chat"
+              onClick={closeMenu}
+              className={`
+                rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-200 flex items-center justify-between
+                ${
+                  isActive('/ai-chat')
+                    ? 'bg-green-600 text-white font-bold shadow-sm'
+                    : 'bg-green-50 text-green-700 border border-green-100 hover:bg-green-100'
+                }
+              `}
+            >
+              <div className="flex items-center gap-2">
+                <Bot size={16} />
+                <span>AI Assistant</span>
+              </div>
+              {isActive('/ai-chat') && <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />}
+            </Link>
 
             {isAuthenticated && (
               <Link

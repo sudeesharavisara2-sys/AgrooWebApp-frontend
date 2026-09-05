@@ -41,6 +41,9 @@ import EditPost from './pages/posts/EditPost';
 import Groups from './pages/chat/Groups';
 import ChatRoom from './pages/chat/ChatRoom';
 
+// AI Chat page (Corrected path based on your folder tree)
+import AIChatPage from './components/chat/AIChatPage'; 
+
 // Admin pages
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -87,6 +90,12 @@ const App: React.FC = () => {
         <Route
           path="/posts/:id"
           element={<PostDetail />}
+        />
+
+        {/* AI Assistant Route */}
+        <Route 
+          path="/ai-chat" 
+          element={<AIChatPage />} 
         />
 
         {/* ---------------------------------------------------------
@@ -141,7 +150,7 @@ const App: React.FC = () => {
           <Route
             path="/posts/:id/edit"
             element={<EditPost />}
-          />{/* 👈 Added EditPost route */}
+          />
 
           <Route
             path="/feed"
