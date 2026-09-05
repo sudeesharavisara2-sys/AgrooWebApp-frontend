@@ -35,6 +35,7 @@ import MyMachines from './pages/machines/MyMachines';
 import PostsList from './pages/posts/PostsList';
 import PostDetail from './pages/posts/PostDetail';
 import CreatePost from './pages/posts/CreatePost';
+import EditPost from './pages/posts/EditPost';
 
 // Chat pages
 import Groups from './pages/chat/Groups';
@@ -136,6 +137,11 @@ const App: React.FC = () => {
             path="/posts/new"
             element={<CreatePost />}
           />
+
+          <Route
+            path="/posts/:id/edit"
+            element={<EditPost />}
+          />{/* 👈 Added EditPost route */}
 
           <Route
             path="/feed"
