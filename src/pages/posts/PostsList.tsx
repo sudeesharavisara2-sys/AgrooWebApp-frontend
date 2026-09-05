@@ -59,6 +59,19 @@ const PostsList: React.FC<Props> = ({ mode }) => {
     }
   };
 
+  // Handle instant removal from list upon deletion
+  const handleDeleted = (id: number) => {
+    if (searchResults) {
+      setSearchResults(searchResults.filter((p) => p.id !== id));
+    }
+    if (data) {
+      setData({
+        ...data,
+        content: data.content.filter((p) => p.id !== id),
+      });
+    }
+  };
+
   const list = searchResults ?? data?.content ?? [];
 
   return (
@@ -94,7 +107,7 @@ const PostsList: React.FC<Props> = ({ mode }) => {
         <>
           <div className="space-y-4">
             {list.map((p) => (
-              <PostCard key={p.id} post={p} />
+              <PostCard key={p.id} post={p} onDeleted={handleDeleted} />
             ))}
           </div>
           {!searchResults && data && <Pagination page={data.number} totalPages={data.totalPages} onChange={setPage} />}

@@ -47,9 +47,19 @@ const PostDetail: React.FC = () => {
     <div className="mx-auto max-w-2xl space-y-6">
       <PostCard post={post} />
 
+      {/* Owner Actions */}
       {isOwner && (
         <div className="flex gap-3">
-          <button className="btn-danger" onClick={handleDelete}>
+          <button 
+            className="btn-secondary" 
+            onClick={() => navigate(`/posts/${post.id}/edit`)}
+          >
+            Edit Post
+          </button>
+          <button 
+            className="btn-danger" 
+            onClick={handleDelete}
+          >
             Delete Post
           </button>
         </div>
