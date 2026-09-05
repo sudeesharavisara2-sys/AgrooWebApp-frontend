@@ -575,6 +575,25 @@ const Home: React.FC = () => {
       </section>
 
       {/* =========================================================
+          Floating AI Assistant Button with Rotation & Pulse Animation
+      ========================================================= */}
+      <Link
+        to="/ai-chat"
+        className="fixed bottom-6 right-6 z-50 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 group animate-bounce"
+        title="Ask AI Assistant"
+      >
+        {/* Rotating AI Robot Icon */}
+        <span className="text-2xl inline-block transition-transform duration-700 group-hover:rotate-[360deg]">
+          🤖
+        </span>
+        
+        {/* Tooltip visible on hover */}
+        <span className="absolute right-16 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap shadow-md">
+          Ask Agroo AI 🌱
+        </span>
+      </Link>
+
+      {/* =========================================================
           6. DEDICATED HOME FOOTER SECTION
           ========================================================= */}
       <footer className="relative w-full bg-black text-white border-t border-white/10">

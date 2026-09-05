@@ -1,5 +1,5 @@
 import React from 'react';
-import { AIChatBox } from '../../components/chat/AIChatBox';
+import { AIChatBox } from './AIChatBox'; // Curly braces සමඟ
 
 export const AIChatPage: React.FC = () => {
   return (

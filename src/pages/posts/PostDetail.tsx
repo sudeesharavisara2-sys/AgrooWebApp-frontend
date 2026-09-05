@@ -11,7 +11,7 @@ import { getErrorMessage } from '../../utils/helpers';
 
 const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth(); // මෙතනට isAdmin එකතු කර ඇත
   const navigate = useNavigate();
   const [post, setPost] = useState<PostResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +32,9 @@ const PostDetail: React.FC = () => {
   if (!post) return null;
 
   const isOwner = user?.username === post.user.username;
+  
+  // පෝස්ට් එකේ අයිතිකරු හෝ Admin කෙනෙක් නම් ඩිලීට් කිරීමට අවසර දේ
+  const canModify = isOwner || isAdmin;
 
   const handleDelete = async () => {
     if (!confirm('Delete this post?')) return;
@@ -47,15 +50,18 @@ const PostDetail: React.FC = () => {
     <div className="mx-auto max-w-2xl space-y-6">
       <PostCard post={post} />
 
-      {/* Owner Actions */}
-      {isOwner && (
+      {/* Owner or Admin Actions */}
+      {canModify && (
         <div className="flex gap-3">
-          <button 
-            className="btn-secondary" 
-            onClick={() => navigate(`/posts/${post.id}/edit`)}
-          >
-            Edit Post
-          </button>
+          {/* අයිතිකරුට පමණක් Edit කිරීමට අවසර දීමට අවශ්‍ය නම් isOwner පාවිච්චි කළ හැක */}
+          {isOwner && (
+            <button 
+              className="btn-secondary" 
+              onClick={() => navigate(`/posts/${post.id}/edit`)}
+            >
+              Edit Post
+            </button>
+          )}
           <button 
             className="btn-danger" 
             onClick={handleDelete}
