@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import WeatherPage from './pages/weather/WeatherPage';
 
 import MainLayout from './components/layout/MainLayout';
 import { AdminRoute, ProtectedRoute } from './components/layout/RouteGuards';
@@ -73,6 +74,7 @@ const App: React.FC = () => {
           MAIN APPLICATION (With MainLayout / Navbar & Footer)
       ========================================================= */}
       <Route element={<MainLayout />}>
+      <Route path="/weather" element={<WeatherPage />} />
         {/* ---------------------------------------------------------
             Public (Other than Home)
         --------------------------------------------------------- */}
