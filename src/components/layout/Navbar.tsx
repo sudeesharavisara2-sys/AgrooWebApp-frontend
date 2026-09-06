@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, User, ChevronDown, Sprout, Bot } from 'lucide-react';
+import { Menu, X, LogOut, User, ChevronDown, Sprout, Bot, Cloud } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const navLinks = [
   { to: '/products', label: 'Products' },
   { to: '/machines', label: 'Machines' },
   { to: '/posts', label: 'Community' },
+  { to: '/weather', label: 'Weather' },  // ✅ Added Weather link
 ];
 
 const Navbar: React.FC = () => {
