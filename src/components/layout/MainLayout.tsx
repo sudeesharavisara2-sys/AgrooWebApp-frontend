@@ -10,9 +10,17 @@ const MainLayout: React.FC = () => (
       <Outlet />
     </main>
 
-    {/* Footer Section */}
-    <footer className="border-t border-gray-200 bg-white py-4 text-center text-xs text-gray-400">
-      Agroo Agricultural Platform &copy; {new Date().getFullYear()}
+   {/* Footer Section */}
+    <footer className="border-t border-gray-200 bg-white py-6 text-center text-xs text-gray-500">
+      <div className="mx-auto flex flex-row items-center justify-center gap-3">
+        {/* Footer Logo */}
+        <img
+          src="/logo.png" // ඔයාගේ logo file එකේ නම වෙනස් නම් මෙතැන හරියටම දෙන්න (උදා: /logo.jpg)
+          alt="Agroo Logo"
+          className="h-16 w-auto object-contain"
+        />
+        <span className="text-sm font-medium">Agroo Agricultural Platform &copy; {new Date().getFullYear()}</span>
+      </div>
     </footer>
 
     {/* =========================================================

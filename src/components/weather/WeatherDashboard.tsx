@@ -16,21 +16,6 @@ interface WeatherData {
   createdAt: string;
 }
 
-interface WeatherAlert {
-  id: number;
-  location: string;
-  alertType: string;
-  severity: string;
-  message: string;
-  temperature: number;
-  humidity: number;
-  windSpeed: number;
-  rainfall: number;
-  isActive: boolean;
-  isSent: boolean;
-  createdAt: string;
-}
-
 // 🇱🇰 Sri Lanka - District-wise Cities / Towns
 const districtLocations: { [key: string]: string[] } = {
   // Western Province
@@ -424,7 +409,6 @@ const districtLocations: { [key: string]: string[] } = {
 const WeatherDashboard: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState('Colombo');
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [alerts, setAlerts] = useState<WeatherAlert[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -453,22 +437,14 @@ const WeatherDashboard: React.FC = () => {
         console.log('⚠️ Could not fetch real weather data:', weatherErr);
       }
 
-      let fetchedAlerts: WeatherAlert[] = [];
+      let fetchedAlerts: any[] = [];
       try {
         const alertsResponse = await axios.get(
           `http://localhost:8081/api/weather/alerts/location/${selectedLocation}`
         );
         fetchedAlerts = alertsResponse.data || [];
-        
-        const sortedAlerts = [...fetchedAlerts].sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-
-        setAlerts(sortedAlerts);
-        console.log(`📋 Found ${sortedAlerts.length} alerts`);
       } catch (alertErr) {
         console.log('ℹ️ No alerts found for this location');
-        setAlerts([]);
       }
 
       if (realWeatherData) {
@@ -546,20 +522,6 @@ const WeatherDashboard: React.FC = () => {
     if (temp > 20) return '🌥️';
     return '☁️';
   };
-
-  const getAlertEmoji = (type: string) => {
-    switch (type) {
-      case 'HEAVY_RAIN': return '🌧️';
-      case 'HIGH_WIND': return '💨';
-      case 'EXTREME_HEAT': return '🌡️';
-      case 'DROUGHT': return '🏜️';
-      case 'STORM': return '🌪️';
-      default: return '⚠️';
-    }
-  };
-
-  const sentAlerts = alerts.filter(alert => alert.isSent);
-  const pendingAlerts = alerts.filter(alert => !alert.isSent);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -675,99 +637,6 @@ const WeatherDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
-
-        {/* ALERTS DISPLAY */}
-        {alerts.length > 0 ? (
-          <div className="space-y-6 mt-6">
-            
-            {/* Sent Alerts Section */}
-            {sentAlerts.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-green-700 flex items-center gap-2">
-                  <span>✅ Sent Alerts</span>
-                  <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                    {sentAlerts.length}
-                  </span>
-                </h3>
-                <div className="space-y-3">
-                  {sentAlerts.map((alert) => (
-                    <div key={alert.id} className="border border-green-200 bg-green-50 rounded-lg p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl">{getAlertEmoji(alert.alertType)}</span>
-                          <span className="font-bold">{alert.alertType}</span>
-                          <span className="px-2 py-0.5 text-white text-xs rounded-full bg-green-600">
-                            {alert.severity}
-                          </span>
-                          <span className="px-2 py-0.5 text-xs rounded bg-green-200 text-green-800 font-medium">
-                            ✅ Email Sent
-                          </span>
-                        </div>
-                        <span className="text-xs text-gray-500">
-                          {new Date(alert.createdAt).toLocaleString()}
-                        </span>
-                      </div>
-                      <p className="text-gray-700 mb-2 text-sm">{alert.message}</p>
-                      <div className="flex flex-wrap gap-4 text-xs text-gray-600">
-                        <span>🌡️ {alert.temperature}°C</span>
-                        <span>💧 {alert.humidity}%</span>
-                        <span>💨 {alert.windSpeed} km/h</span>
-                        <span>🌧️ {alert.rainfall} mm</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Pending Alerts Section */}
-            {pendingAlerts.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-amber-700 flex items-center gap-2">
-                  <span>⏳ Pending Alerts</span>
-                  <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                    {pendingAlerts.length}
-                  </span>
-                </h3>
-                <div className="space-y-3">
-                  {pendingAlerts.map((alert) => (
-                    <div key={alert.id} className="border border-amber-200 bg-amber-50 rounded-lg p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl">{getAlertEmoji(alert.alertType)}</span>
-                          <span className="font-bold">{alert.alertType}</span>
-                          <span className="px-2 py-0.5 text-white text-xs rounded-full bg-amber-500">
-                            {alert.severity}
-                          </span>
-                          <span className="px-2 py-0.5 text-xs rounded bg-amber-200 text-amber-800 font-medium">
-                            ⏳ Pending
-                          </span>
-                        </div>
-                        <span className="text-xs text-gray-500">
-                          {new Date(alert.createdAt).toLocaleString()}
-                        </span>
-                      </div>
-                      <p className="text-gray-700 mb-2 text-sm">{alert.message}</p>
-                      <div className="flex flex-wrap gap-4 text-xs text-gray-600">
-                        <span>🌡️ {alert.temperature}°C</span>
-                        <span>💧 {alert.humidity}%</span>
-                        <span>💨 {alert.windSpeed} km/h</span>
-                        <span>🌧️ {alert.rainfall} mm</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-          </div>
-        ) : (
-          weather && (
-            <div className="text-center py-4 text-gray-500 bg-gray-50 rounded-lg mt-6">
-              ✅ No weather alerts for {selectedLocation}
-            </div>
-          )
         )}
 
         {!weather && !loading && !error && (
