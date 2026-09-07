@@ -106,19 +106,19 @@ const Home: React.FC = () => {
       <header className="sticky top-0 left-0 right-0 z-50 w-full bg-black/30 backdrop-blur-md border-b border-white/10 shadow-lg">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           
-          {/* Logo */}
-          <a
-            href="#home"
-            onClick={closeMenu}
-            className="group flex items-center gap-2.5 text-white"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md transition-transform duration-200 group-hover:scale-105">
-              <Sprout size={20} />
-            </div>
-            <span className="text-xl font-black tracking-wider text-white">
-              Agroo
-            </span>
-          </a>
+       {/* Logo */}
+        <a
+          href="#home"
+          onClick={closeMenu}
+          className="group flex items-center gap-2.5 text-white"
+        >
+         <img
+  src="/logo.png"
+  alt="Agroo Logo"
+  className="h-16 w-auto object-contain transition-all duration-300 group-hover:scale-110 animate-pulse-soft"
+/>
+
+        </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1.5 rounded-full bg-black/40 p-1.5 border border-white/10 shadow-2xl md:flex backdrop-blur-xl">
@@ -594,18 +594,20 @@ const Home: React.FC = () => {
       </Link>
 
       {/* =========================================================
-          6. DEDICATED HOME FOOTER SECTION
-          ========================================================= */}
+    6. DEDICATED HOME FOOTER SECTION
+    ========================================================= */}
       <footer className="relative w-full bg-black text-white border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white font-black shadow-lg">
-                  🌱
-                </span>
-                <span className="text-xl font-black tracking-tight text-white">Agroo Ecosystem</span>
+              <div className="flex items-center gap-2.5">
+                {/* Logo Image */}
+                <img
+                  src="/logo.png"
+                  alt="Agroo Logo"
+                  className="h-12 w-auto object-contain"
+                />
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">
                 Sri Lanka’s premier digital agricultural platform connecting local farmers with modern buyers and machine rentals for sustainable growth.

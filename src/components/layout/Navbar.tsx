@@ -41,28 +41,17 @@ const Navbar: React.FC = () => {
           md:px-6
         "
       >
-        {/* Logo */}
+ {/* Logo */}
         <Link
           to="/"
           onClick={closeMenu}
           className="group flex items-center gap-2.5 text-gray-900"
         >
-          <div
-            className="
-              flex h-10 w-10 items-center justify-center
-              rounded-xl border border-agroo-600/20
-              bg-agroo-600 text-white
-              shadow-md backdrop-blur-md
-              transition-transform duration-200
-              group-hover:scale-105
-            "
-          >
-            <Sprout size={20} />
-          </div>
-
-          <span className="text-xl font-black tracking-wider text-agroo-700">
-            Agroo
-          </span>
+          <img
+            src="/logo.png"
+            alt="Agroo Logo"
+            className="h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+          />
         </Link>
 
         {/* Desktop Navigation */}
