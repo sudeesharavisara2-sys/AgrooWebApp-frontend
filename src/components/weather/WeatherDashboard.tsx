@@ -413,7 +413,9 @@ const WeatherDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>('');
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Fixed TypeScript error by using ReturnType<typeof setInterval> instead of NodeJS.Timeout
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchWeatherData = async () => {
     setLoading(true);

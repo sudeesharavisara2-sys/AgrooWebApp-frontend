@@ -151,16 +151,16 @@ const ProductList: React.FC = () => {
                     </div>
 
                     {/* Badges */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-md font-medium">
-                        {humanizeEnum(p.category)}
+                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                    <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-md font-medium">
+                      {humanizeEnum(p.category)}
+                    </span>
+                    {(p as any).listingType && (
+                      <span className="px-2 py-0.5 text-xs bg-green-50 text-green-700 rounded-md font-medium">
+                        {humanizeEnum((p as any).listingType)}
                       </span>
-                      {p.listingType && (
-                        <span className="px-2 py-0.5 text-xs bg-green-50 text-green-700 rounded-md font-medium">
-                          {humanizeEnum(p.listingType)}
-                        </span>
-                      )}
-                    </div>
+                    )}
+                  </div>
                   </div>
                 </Link>
               );

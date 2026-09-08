@@ -10,7 +10,7 @@ import type { MachineRentalResponse, ProductResponse } from '../types';
 import { 
   Sprout, Users, ShieldCheck, Mail, Phone, MapPin, Send, 
   Globe, MessageSquare, Share2, ExternalLink, Heart, 
-  Menu, X, LogOut, User, ChevronDown 
+  Menu, X, LogOut, User, ChevronDown, Cloud 
 } from 'lucide-react';
 
 const Home: React.FC = () => {
@@ -99,10 +99,9 @@ const Home: React.FC = () => {
         />
         <div className="absolute inset-0 bg-gray-950/80 fixed" />
       </div>
-
 {/* =========================================================
-          MODERN GLASSMORPHISM NAVBAR 
-          ========================================================= */}
+        MODERN GLASSMORPHISM NAVBAR 
+        ========================================================= */}
       <header className="sticky top-0 left-0 right-0 z-50 w-full bg-black/30 backdrop-blur-md border-b border-white/10 shadow-lg">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           
@@ -117,7 +116,6 @@ const Home: React.FC = () => {
   alt="Agroo Logo"
   className="h-16 w-auto object-contain transition-all duration-300 group-hover:scale-110 animate-pulse-soft"
 />
-
         </a>
 
           {/* Desktop Navigation */}
@@ -141,9 +139,17 @@ const Home: React.FC = () => {
               Community
             </Link>
 
+            {/* Weather Button */}
+            <Link 
+              to="/weather" 
+              className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            >
+              <Cloud size={14} />
+              <span>Weather</span>
+            </Link>
+
             {isAuthenticated && (
               <>
-                
                 <Link to="/chat" className="rounded-full px-4 py-2 text-xs font-medium text-gray-300 transition-all duration-300 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   Chat
                 </Link>
@@ -183,7 +189,7 @@ const Home: React.FC = () => {
               </>
             ) : (
               <>
-                {/* Updated Clear Outline Login Button */}
+                {/* Clear Outline Login Button */}
                 <Link
                   to="/login"
                   className="flex items-center gap-2 rounded-full border-2 border-emerald-500/60 bg-emerald-950/30 px-5 py-2 text-xs font-bold text-emerald-300 transition-all duration-300 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 backdrop-blur-md"
