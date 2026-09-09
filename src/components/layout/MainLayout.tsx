@@ -15,7 +15,7 @@ const MainLayout: React.FC = () => (
       <div className="mx-auto flex flex-row items-center justify-center gap-3">
         {/* Footer Logo */}
         <img
-          src="/logo.png" // ඔයාගේ logo file එකේ නම වෙනස් නම් මෙතැන හරියටම දෙන්න (උදා: /logo.jpg)
+          src="/logo.png" 
           alt="Agroo Logo"
           className="h-16 w-auto object-contain"
         />
