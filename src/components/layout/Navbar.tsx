@@ -7,7 +7,7 @@ const navLinks = [
   { to: '/products', label: 'Products' },
   { to: '/machines', label: 'Machines' },
   { to: '/posts', label: 'Community' },
-  { to: '/weather', label: 'Weather' },  // ✅ Added Weather link
+  { to: '/weather', label: 'Weather' },  
 ];
 
 const Navbar: React.FC = () => {
