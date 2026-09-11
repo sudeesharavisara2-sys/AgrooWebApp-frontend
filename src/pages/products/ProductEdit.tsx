@@ -56,8 +56,18 @@ const ProductEdit: React.FC = () => {
     expiryDate: product.expiryDate || '',
   };
 
-  const handleSubmit = async (data: ProductRequest) => {
+  // මෙතැනදී images ද (File[]) පිළිගන්නා ලෙස සකසා ඇත
+  const handleSubmit = async (data: ProductRequest, images?: File[]) => {
+    // 1. මුලින්ම ප්‍රධාන විස්තර (Product details) update කරයි
     await productsApi.update(product.id, data);
+
+    // 2. අලුතින් images තෝරාගෙන තිබේ නම් ඒවා එකින් එක API එක හරහා upload කරයි
+    if (images && images.length > 0) {
+      for (const image of images) {
+        await productsApi.uploadImage(product.id, image); // ඔබේ api service එකේ ඇති image upload method එක මෙතැනට දෙන්න
+      }
+    }
+
     navigate(`/products/${product.id}`);
   };
 
@@ -78,11 +88,7 @@ const ProductEdit: React.FC = () => {
 
       {product.images.length > 0 && (
         <div className="card space-y-3">
-          <h2 className="font-semibold text-gray-800">Images</h2>
-          <p className="text-xs text-gray-400">
-            Note: to add new images, delete the listing and re-create it with photos, or use the image
-            actions below to manage existing ones.
-          </p>
+          <h2 className="font-semibold text-gray-800">Existing Images</h2>
           <div className="flex flex-wrap gap-3">
             {product.images.map((img) => (
               <div key={img.id} className="relative">
@@ -108,7 +114,13 @@ const ProductEdit: React.FC = () => {
       )}
 
       <div className="card">
-        <ProductForm initial={initial} submitLabel="Save Changes" allowImages={false} onSubmit={handleSubmit} />
+        {/* allowImages={true} කර ඇත, එවිට අලුත් පින්තූර තෝරා ගැනීමට Form එකේ ඉඩ ලැබේ */}
+        <ProductForm 
+          initial={initial} 
+          submitLabel="Save Changes" 
+          allowImages={true} 
+          onSubmit={handleSubmit} 
+        />
       </div>
     </div>
   );
