@@ -1,4 +1,5 @@
 import apiClient from './client';
+
 import type {
   Page,
   ProductCategory,
@@ -25,84 +26,306 @@ export interface AdvancedSearchParams {
 }
 
 export const productsApi = {
-  create: (data: ProductRequest, images?: File[]) => {
-    if (images && images.length > 0) {
-      const formData = new FormData();
+  // ------------------------------------------------------------
+  // Create product
+  // ------------------------------------------------------------
+  create: (
+    data: ProductRequest,
+    images?: File[]
+  ) => {
+    if (
+      images &&
+      images.length > 0
+    ) {
+      const formData =
+        new FormData();
+
       formData.append(
         'product',
-        new Blob([JSON.stringify(data)], { type: 'application/json' })
+        new Blob(
+          [JSON.stringify(data)],
+          {
+            type: 'application/json',
+          }
+        )
       );
-      images.forEach((img) => formData.append('images', img));
+
+      images.forEach((image) => {
+        formData.append(
+          'images',
+          image
+        );
+      });
+
       return apiClient
-        .post<ProductResponse>('/api/products', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        .then((r) => r.data);
+        .post<ProductResponse>(
+          '/api/products',
+          formData,
+          {
+            headers: {
+              'Content-Type':
+                'multipart/form-data',
+            },
+          }
+        )
+        .then(
+          (response) =>
+            response.data
+        );
     }
-    return apiClient.post<ProductResponse>('/api/products/json', data).then((r) => r.data);
+
+    return apiClient
+      .post<ProductResponse>(
+        '/api/products/json',
+        data
+      )
+      .then(
+        (response) =>
+          response.data
+      );
   },
 
-  getAll: (params: ProductListParams = {}) =>
+  // ------------------------------------------------------------
+  // Get all products
+  // ------------------------------------------------------------
+  getAll: (
+    params: ProductListParams = {}
+  ) =>
     apiClient
-      .get<Page<ProductResponse>>('/api/products', {
-        params: { page: 0, size: 10, sortBy: 'createdAt', direction: 'desc', ...params },
-      })
-      .then((r) => r.data),
+      .get<Page<ProductResponse>>(
+        '/api/products',
+        {
+          params: {
+            page: 0,
+            size: 10,
+            sortBy: 'createdAt',
+            direction: 'desc',
+            ...params,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
+  // ------------------------------------------------------------
+  // Get product by ID
+  // ------------------------------------------------------------
   getById: (id: number) =>
-    apiClient.get<ProductResponse>(`/api/products/${id}`).then((r) => r.data),
-
-  getByFarmer: (farmerId: number, page = 0, size = 10) =>
     apiClient
-      .get<Page<ProductResponse>>(`/api/products/farmer/${farmerId}`, { params: { page, size } })
-      .then((r) => r.data),
+      .get<ProductResponse>(
+        `/api/products/${id}`
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  getByCategory: (category: ProductCategory, page = 0, size = 10) =>
+  // ------------------------------------------------------------
+  // Get products by farmer
+  // ------------------------------------------------------------
+  getByFarmer: (
+    farmerId: number,
+    page = 0,
+    size = 10
+  ) =>
     apiClient
-      .get<Page<ProductResponse>>(`/api/products/category/${category}`, {
-        params: { page, size },
-      })
-      .then((r) => r.data),
+      .get<Page<ProductResponse>>(
+        `/api/products/farmer/${farmerId}`,
+        {
+          params: {
+            page,
+            size,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  getByType: (productType: ProductType, page = 0, size = 10) =>
+  // ------------------------------------------------------------
+  // Get products by category
+  // ------------------------------------------------------------
+  getByCategory: (
+    category: ProductCategory,
+    page = 0,
+    size = 10
+  ) =>
     apiClient
-      .get<Page<ProductResponse>>(`/api/products/type/${productType}`, {
-        params: { page, size },
-      })
-      .then((r) => r.data),
+      .get<Page<ProductResponse>>(
+        `/api/products/category/${category}`,
+        {
+          params: {
+            page,
+            size,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  getBySaleType: (saleType: SaleType, page = 0, size = 10) =>
+  // ------------------------------------------------------------
+  // Get products by product type
+  // ------------------------------------------------------------
+  getByType: (
+    productType: ProductType,
+    page = 0,
+    size = 10
+  ) =>
     apiClient
-      .get<Page<ProductResponse>>(`/api/products/sale-type/${saleType}`, {
-        params: { page, size },
-      })
-      .then((r) => r.data),
+      .get<Page<ProductResponse>>(
+        `/api/products/type/${productType}`,
+        {
+          params: {
+            page,
+            size,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  search: (keyword?: string, location?: string) =>
+  // ------------------------------------------------------------
+  // Get products by sale type
+  // ------------------------------------------------------------
+  getBySaleType: (
+    saleType: SaleType,
+    page = 0,
+    size = 10
+  ) =>
     apiClient
-      .get<ProductResponse[]>('/api/products/search', { params: { keyword, location } })
-      .then((r) => r.data),
+      .get<Page<ProductResponse>>(
+        `/api/products/sale-type/${saleType}`,
+        {
+          params: {
+            page,
+            size,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  advancedSearch: (params: AdvancedSearchParams) =>
+  // ------------------------------------------------------------
+  // Search products
+  // ------------------------------------------------------------
+  search: (
+    keyword?: string,
+    location?: string
+  ) =>
     apiClient
-      .get<ProductResponse[]>('/api/products/advanced-search', { params })
-      .then((r) => r.data),
+      .get<ProductResponse[]>(
+        '/api/products/search',
+        {
+          params: {
+            keyword,
+            location,
+          },
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  update: (id: number, data: ProductRequest) =>
-    apiClient.put<ProductResponse>(`/api/products/${id}`, data).then((r) => r.data),
-
-  toggleAvailability: (id: number) =>
+  // ------------------------------------------------------------
+  // Advanced search
+  // ------------------------------------------------------------
+  advancedSearch: (
+    params: AdvancedSearchParams
+  ) =>
     apiClient
-      .patch<ProductResponse>(`/api/products/${id}/toggle-availability`)
-      .then((r) => r.data),
+      .get<ProductResponse[]>(
+        '/api/products/advanced-search',
+        {
+          params,
+        }
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  setPrimaryImage: (imageId: number) =>
+  // ------------------------------------------------------------
+  // Update product details
+  // ------------------------------------------------------------
+  update: (
+    id: number,
+    data: ProductRequest
+  ) =>
     apiClient
-      .patch<ProductResponse>(`/api/products/images/${imageId}/set-primary`)
-      .then((r) => r.data),
+      .put<ProductResponse>(
+        `/api/products/${id}`,
+        data
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  delete: (id: number) => apiClient.delete<void>(`/api/products/${id}`).then((r) => r.data),
+  // ------------------------------------------------------------
+  // Toggle availability
+  // ------------------------------------------------------------
+  toggleAvailability: (
+    id: number
+  ) =>
+    apiClient
+      .patch<ProductResponse>(
+        `/api/products/${id}/toggle-availability`
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 
-  deleteImage: (imageId: number) =>
-    apiClient.delete<void>(`/api/products/images/${imageId}`).then((r) => r.data),
+  // ------------------------------------------------------------
+  // Set primary image
+  // ------------------------------------------------------------
+  setPrimaryImage: (
+    imageId: number
+  ) =>
+    apiClient
+      .patch<ProductResponse>(
+        `/api/products/images/${imageId}/set-primary`
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
+
+  // ------------------------------------------------------------
+  // Delete product
+  // ------------------------------------------------------------
+  delete: (id: number) =>
+    apiClient
+      .delete<void>(
+        `/api/products/${id}`
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
+
+  // ------------------------------------------------------------
+  // Delete product image
+  // ------------------------------------------------------------
+  deleteImage: (
+    imageId: number
+  ) =>
+    apiClient
+      .delete<void>(
+        `/api/products/images/${imageId}`
+      )
+      .then(
+        (response) =>
+          response.data
+      ),
 };

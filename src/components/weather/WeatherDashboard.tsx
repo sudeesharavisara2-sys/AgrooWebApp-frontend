@@ -1,20 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-
-interface WeatherData {
-  id: number;
-  location: string;
-  alertType: string | null;
-  severity: string | null;
-  message: string | null;
-  temperature: number;
-  humidity: number;
-  windSpeed: number;
-  rainfall: number;
-  isActive: boolean;
-  isSent: boolean;
-  createdAt: string;
-}
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  weatherAPI,
+  type WeatherData,
+  type WeatherAlert,
+} from '../../api/weather';
 
 // 🇱🇰 Sri Lanka - District-wise Cities / Towns
 const districtLocations: { [key: string]: string[] } = {
@@ -39,7 +28,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Nawala',
     'Kotikawatta',
     'Wellampitiya',
-    'Piliyandala'
+    'Piliyandala',
   ],
 
   'Gampaha District': [
@@ -62,7 +51,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Delgoda',
     'Ganemulla',
     'Yakkala',
-    'Biyagama'
+    'Biyagama',
   ],
 
   'Kalutara District': [
@@ -78,7 +67,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Bulathsinhala',
     'Agalawatta',
     'Payagala',
-    'Dodangoda'
+    'Dodangoda',
   ],
 
   // Central Province
@@ -96,7 +85,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Digana',
     'Galagedara',
     'Pussellawa',
-    'Teldeniya'
+    'Teldeniya',
   ],
 
   'Matale District': [
@@ -109,7 +98,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Laggala',
     'Palapathwela',
     'Yatawatta',
-    'Sigiriya'
+    'Sigiriya',
   ],
 
   'Nuwara Eliya District': [
@@ -124,7 +113,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Lindula',
     'Pundaluoya',
     'Walapane',
-    'Hanguranketha'
+    'Hanguranketha',
   ],
 
   // Southern Province
@@ -143,7 +132,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Unawatuna',
     'Koggala',
     'Neluwa',
-    'Nagoda'
+    'Nagoda',
   ],
 
   'Matara District': [
@@ -159,7 +148,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Mirissa',
     'Kamburugamuwa',
     'Gandara',
-    'Kotapola'
+    'Kotapola',
   ],
 
   'Hambantota District': [
@@ -174,7 +163,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Sooriyawewa',
     'Lunugamvehera',
     'Walasmulla',
-    'Angunakolapelessa'
+    'Angunakolapelessa',
   ],
 
   // Northern Province
@@ -190,7 +179,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Chankanai',
     'Manipay',
     'Uduvil',
-    'Velanai'
+    'Velanai',
   ],
 
   'Kilinochchi District': [
@@ -199,7 +188,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Poonakary',
     'Karachchi',
     'Akkarayankulam',
-    'Murukandy'
+    'Murukandy',
   ],
 
   'Mannar District': [
@@ -209,7 +198,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Murunkan',
     'Pesalai',
     'Talaimannar',
-    'Nanaddan'
+    'Nanaddan',
   ],
 
   'Vavuniya District': [
@@ -217,7 +206,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Nedunkeni',
     'Settikulam',
     'Vengalacheddikulam',
-    'Omanthai'
+    'Omanthai',
   ],
 
   'Mullaitivu District': [
@@ -227,7 +216,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Oddusuddan',
     'Maritimepattu',
     'Thunukkai',
-    'Puthukudiyiruppu'
+    'Puthukudiyiruppu',
   ],
 
   // Eastern Province
@@ -240,7 +229,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Nilaveli',
     'Kuchchaveli',
     'Serunuwara',
-    'Echchilampattai'
+    'Echchilampattai',
   ],
 
   'Batticaloa District': [
@@ -255,7 +244,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Oddamavadi',
     'Vakarai',
     'Kokkadichcholai',
-    'Paddiruppu'
+    'Paddiruppu',
   ],
 
   'Ampara District': [
@@ -272,7 +261,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Uhana',
     'Damana',
     'Lahugala',
-    'Samanthurai'
+    'Samanthurai',
   ],
 
   // North Western Province
@@ -293,7 +282,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Giriulla',
     'Dankotuwa',
     'Kobeigane',
-    'Rideegama'
+    'Rideegama',
   ],
 
   'Puttalam District': [
@@ -309,7 +298,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Madampe',
     'Mundel',
     'Vanathavilluwa',
-    'Norachcholai'
+    'Norachcholai',
   ],
 
   // North Central Province
@@ -326,7 +315,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Horowpothana',
     'Padaviya',
     'Rambewa',
-    'Rajanganaya'
+    'Rajanganaya',
   ],
 
   'Polonnaruwa District': [
@@ -339,7 +328,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Dimbulagala',
     'Elahera',
     'Aralaganwila',
-    'Bakamoona'
+    'Bakamoona',
   ],
 
   // Uva Province
@@ -356,7 +345,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Kandaketiya',
     'Lunugala',
     'Meegahakiula',
-    'Soranathota'
+    'Soranathota',
   ],
 
   'Monaragala District': [
@@ -370,7 +359,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Thanamalwila',
     'Badalkumbura',
     'Madulla',
-    'Okkampitiya'
+    'Okkampitiya',
   ],
 
   // Sabaragamuwa Province
@@ -387,7 +376,7 @@ const districtLocations: { [key: string]: string[] } = {
     'Opanayake',
     'Kolonna',
     'Nivithigala',
-    'Ayagama'
+    'Ayagama',
   ],
 
   'Kegalle District': [
@@ -402,8 +391,8 @@ const districtLocations: { [key: string]: string[] } = {
     'Dehiowita',
     'Galigamuwa',
     'Aranayake',
-    'Bulathkohupitiya'
-  ]
+    'Bulathkohupitiya',
+  ],
 };
 
 const WeatherDashboard: React.FC = () => {
@@ -412,91 +401,156 @@ const WeatherDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
-  
-  // Fixed TypeScript error by using ReturnType<typeof setInterval> instead of NodeJS.Timeout
+  const [lastUpdated, setLastUpdated] = useState('');
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchWeatherData = async () => {
     setLoading(true);
     setError(null);
+
     try {
       console.log(`🌤️ Fetching weather for: ${selectedLocation}`);
-      
-      let realWeatherData = null;
+
+      let realWeatherData: WeatherData | null = null;
+
+      // ------------------------------------------------------------
+      // Fetch live weather data
+      // ------------------------------------------------------------
       try {
-        const weatherResponse = await axios.post(
-          `http://localhost:8081/api/weather/check/${selectedLocation}`
-        );
-        
+        const weatherResponse = await weatherAPI.checkWeather(selectedLocation);
+
         if (weatherResponse.status === 204) {
           console.log('ℹ️ No new alert, but weather is normal');
-        } else if (weatherResponse.status === 200 && weatherResponse.data) {
+        } else if (
+          weatherResponse.status === 200 &&
+          weatherResponse.data
+        ) {
           realWeatherData = weatherResponse.data;
-          console.log('✅ REAL weather data received:', realWeatherData);
+
+          console.log(
+            '✅ REAL weather data received:',
+            realWeatherData
+          );
         }
       } catch (weatherErr) {
-        console.log('⚠️ Could not fetch real weather data:', weatherErr);
+        console.log(
+          '⚠️ Could not fetch real weather data:',
+          weatherErr
+        );
       }
 
-      let fetchedAlerts: any[] = [];
+      // ------------------------------------------------------------
+      // Fetch existing weather alerts
+      // ------------------------------------------------------------
+      let fetchedAlerts: WeatherAlert[] = [];
+
       try {
-        const alertsResponse = await axios.get(
-          `http://localhost:8081/api/weather/alerts/location/${selectedLocation}`
-        );
+        const alertsResponse =
+          await weatherAPI.getAlertsByLocation(selectedLocation);
+
         fetchedAlerts = alertsResponse.data || [];
       } catch (alertErr) {
-        console.log('ℹ️ No alerts found for this location');
+        console.log(
+          'ℹ️ No alerts found for this location:',
+          alertErr
+        );
       }
 
+      // ------------------------------------------------------------
+      // Use live weather first
+      // ------------------------------------------------------------
       if (realWeatherData) {
         setWeather(realWeatherData);
-        console.log('✅ Using REAL weather data from OpenWeatherMap');
-      } else if (fetchedAlerts.length > 0) {
-        const latestAlert = [...fetchedAlerts].sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+
+        console.log(
+          '✅ Using REAL weather data from OpenWeatherMap'
+        );
+      }
+
+      // ------------------------------------------------------------
+      // Fallback to latest stored alert
+      // ------------------------------------------------------------
+      else if (fetchedAlerts.length > 0) {
+        const latestAlert = [...fetchedAlerts].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() -
+            new Date(a.createdAt).getTime()
         )[0];
-        
-        setWeather({
+
+        const fallbackWeather: WeatherData = {
           id: latestAlert.id,
-          location: selectedLocation,
-          alertType: null,
-          severity: null,
-          message: null,
+          location: latestAlert.location || selectedLocation,
+          alertType: latestAlert.alertType || null,
+          severity: latestAlert.severity || null,
+          message: latestAlert.message || null,
           temperature: latestAlert.temperature,
           humidity: latestAlert.humidity,
           windSpeed: latestAlert.windSpeed,
           rainfall: latestAlert.rainfall,
-          isActive: false,
-          isSent: false,
-          createdAt: latestAlert.createdAt
-        });
-        console.log('⚠️ Using fallback alert data (no real weather)');
+          isActive: latestAlert.isActive,
+          isSent: latestAlert.isSent,
+
+          // WeatherAlert does not contain expiresAt,
+          // therefore use an empty string for fallback data.
+          expiresAt: '',
+
+          createdAt: latestAlert.createdAt,
+        };
+
+        setWeather(fallbackWeather);
+
+        console.log(
+          '⚠️ Using fallback alert data (no real weather)'
+        );
       } else {
         setWeather(null);
-        console.log('❌ No weather data available');
+
+        console.log(
+          '❌ No weather data available'
+        );
       }
 
-      setLastUpdated(new Date().toLocaleTimeString());
-
+      setLastUpdated(
+        new Date().toLocaleTimeString()
+      );
     } catch (err: any) {
-      console.error('❌ Error fetching weather:', err);
-      if (err.response?.status === 403) {
-        setError('🔐 Please login to view weather data');
-      } else if (err.code === 'ECONNREFUSED') {
-        setError('🔌 Cannot connect to server. Please check if backend is running.');
+      console.error(
+        '❌ Error fetching weather:',
+        err
+      );
+
+      if (
+        err?.status === 401 ||
+        err?.status === 403
+      ) {
+        setError(
+          '🔒 Please login to view weather data'
+        );
+      } else if (err?.status === 0) {
+        setError(
+          '🔌 Cannot connect to server. Please check your connection.'
+        );
       } else {
-        setError(`❌ Failed to fetch weather data`);
+        setError(
+          '❌ Failed to fetch weather data'
+        );
       }
     } finally {
       setLoading(false);
     }
   };
 
+  // ------------------------------------------------------------
+  // Load weather when location changes
+  // ------------------------------------------------------------
   useEffect(() => {
     fetchWeatherData();
   }, [selectedLocation]);
 
+  // ------------------------------------------------------------
+  // Auto refresh every 5 minutes
+  // ------------------------------------------------------------
   useEffect(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -505,31 +559,44 @@ const WeatherDashboard: React.FC = () => {
 
     if (autoRefresh) {
       intervalRef.current = setInterval(() => {
-        console.log('🔄 Auto-refreshing weather...');
+        console.log(
+          '🔄 Auto-refreshing weather...'
+        );
+
         fetchWeatherData();
-      }, 300000); // 5 minutes
+      }, 300000);
     }
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
   }, [selectedLocation, autoRefresh]);
 
+  // ------------------------------------------------------------
+  // Weather icon
+  // ------------------------------------------------------------
   const getWeatherIcon = (temp: number) => {
     if (temp > 35) return '☀️';
     if (temp > 30) return '🌤️';
     if (temp > 25) return '⛅';
     if (temp > 20) return '🌥️';
-    return '☁️';
+
+    return '❄️';
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-lg p-6">
+
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">🌤️ Real-Time Weather</h2>
+          <h2 className="text-2xl font-bold">
+            🌤️ Real-Time Weather
+          </h2>
+
           <span className="text-sm text-gray-500">
             Last updated: {lastUpdated || 'Not yet'}
           </span>
@@ -539,13 +606,23 @@ const WeatherDashboard: React.FC = () => {
         <div className="flex flex-wrap gap-4 mb-6">
           <select
             value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
+            onChange={(e) =>
+              setSelectedLocation(e.target.value)
+            }
             className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
           >
-            {Object.entries(districtLocations).map(([district, cities]) => (
-              <optgroup key={district} label={district}>
+            {Object.entries(
+              districtLocations
+            ).map(([district, cities]) => (
+              <optgroup
+                key={district}
+                label={district}
+              >
                 {cities.map((city) => (
-                  <option key={city} value={city}>
+                  <option
+                    key={city}
+                    value={city}
+                  >
                     {city}
                   </option>
                 ))}
@@ -554,105 +631,192 @@ const WeatherDashboard: React.FC = () => {
           </select>
 
           <button
+            type="button"
             onClick={fetchWeatherData}
             disabled={loading}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >
-            {loading ? 'Loading...' : '🔄 Refresh'}
+            {loading
+              ? 'Loading...'
+              : '🔄 Refresh'}
           </button>
 
           <button
-            onClick={() => setAutoRefresh(!autoRefresh)}
+            type="button"
+            onClick={() =>
+              setAutoRefresh(
+                (current) => !current
+              )
+            }
             className={`px-4 py-2 rounded-lg border ${
-              autoRefresh 
-                ? 'bg-green-100 text-green-700 border-green-300' 
+              autoRefresh
+                ? 'bg-green-100 text-green-700 border-green-300'
                 : 'bg-gray-100 text-gray-700 border-gray-300'
             }`}
           >
-            {autoRefresh ? '⏸️ Auto Refresh ON' : '▶️ Auto Refresh OFF'}
+            {autoRefresh
+              ? '⏸️ Auto Refresh ON'
+              : '▶️ Auto Refresh OFF'}
           </button>
         </div>
 
+        {/* Error */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
 
-        {/* REAL WEATHER DISPLAY */}
+        {/* Weather */}
         {weather && (
           <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6 mb-6">
+
             <div className="flex items-center justify-between mb-4">
+
               <div className="flex items-center gap-3">
                 <span className="text-5xl">
-                  {getWeatherIcon(weather.temperature || 25)}
+                  {getWeatherIcon(
+                    weather.temperature ?? 25
+                  )}
                 </span>
+
                 <div>
-                  <h3 className="text-2xl font-bold">{selectedLocation}</h3>
+                  <h3 className="text-2xl font-bold">
+                    {selectedLocation}
+                  </h3>
+
                   <p className="text-gray-500 text-sm">
-                    {weather.alertType ? '⚠️ Alert Active' : '✅ Weather is normal'}
+                    {weather.alertType
+                      ? `⚠️ ${weather.alertType}`
+                      : '✅ Weather is normal'}
                   </p>
                 </div>
               </div>
+
               <div className="text-right">
                 <div className="text-4xl font-bold text-blue-600">
-                  {weather.temperature ? weather.temperature.toFixed(1) : '--'}°C
+                  {weather.temperature != null
+                    ? weather.temperature.toFixed(1)
+                    : '--'}
+                  °C
                 </div>
+
                 <div className="text-sm text-gray-500">
                   Real-time data
                 </div>
               </div>
             </div>
 
-            {/* Weather Parameters Grid */}
+            {/* Weather Parameters */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+
+              {/* Temperature */}
               <div className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-1">🌡️</div>
+                <div className="text-3xl mb-1">
+                  🌡️
+                </div>
+
                 <div className="text-2xl font-bold text-blue-600">
-                  {weather.temperature ? weather.temperature.toFixed(1) : '--'}°C
+                  {weather.temperature != null
+                    ? weather.temperature.toFixed(1)
+                    : '--'}
+                  °C
                 </div>
-                <div className="text-sm text-gray-600">Temperature</div>
+
+                <div className="text-sm text-gray-600">
+                  Temperature
+                </div>
               </div>
 
+              {/* Humidity */}
               <div className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-1">💧</div>
+                <div className="text-3xl mb-1">
+                  💧
+                </div>
+
                 <div className="text-2xl font-bold text-blue-500">
-                  {weather.humidity ? weather.humidity.toFixed(1) : '--'}%
+                  {weather.humidity != null
+                    ? weather.humidity.toFixed(1)
+                    : '--'}
+                  %
                 </div>
-                <div className="text-sm text-gray-600">Humidity</div>
+
+                <div className="text-sm text-gray-600">
+                  Humidity
+                </div>
               </div>
 
+              {/* Wind */}
               <div className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-1">💨</div>
+                <div className="text-3xl mb-1">
+                  💨
+                </div>
+
                 <div className="text-2xl font-bold text-teal-600">
-                  {weather.windSpeed ? weather.windSpeed.toFixed(1) : '--'} km/h
+                  {weather.windSpeed != null
+                    ? weather.windSpeed.toFixed(1)
+                    : '--'}{' '}
+                  km/h
                 </div>
-                <div className="text-sm text-gray-600">Wind Speed</div>
+
+                <div className="text-sm text-gray-600">
+                  Wind Speed
+                </div>
               </div>
 
+              {/* Rainfall */}
               <div className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-1">🌧️</div>
-                <div className="text-2xl font-bold text-blue-400">
-                  {weather.rainfall ? weather.rainfall.toFixed(1) : '--'} mm
+                <div className="text-3xl mb-1">
+                  🌧️
                 </div>
-                <div className="text-sm text-gray-600">Rainfall</div>
+
+                <div className="text-2xl font-bold text-blue-400">
+                  {weather.rainfall != null
+                    ? weather.rainfall.toFixed(1)
+                    : '--'}{' '}
+                  mm
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  Rainfall
+                </div>
               </div>
+
             </div>
+
+            {/* Alert message */}
+            {weather.message && (
+              <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="font-medium text-yellow-800">
+                  ⚠️ {weather.message}
+                </p>
+              </div>
+            )}
+
           </div>
         )}
 
-        {!weather && !loading && !error && (
-          <div className="text-center py-12 text-gray-500">
-            Select a location to view weather data
-          </div>
-        )}
+        {/* No Data */}
+        {!weather &&
+          !loading &&
+          !error && (
+            <div className="text-center py-12 text-gray-500">
+              Select a location to view weather data
+            </div>
+          )}
 
+        {/* Loading */}
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent"></div>
-            <p className="mt-2 text-gray-500">Loading weather data...</p>
+
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent" />
+
+            <p className="mt-2 text-gray-500">
+              Loading weather data...
+            </p>
           </div>
         )}
+
       </div>
     </div>
   );
