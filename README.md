@@ -1,112 +1,488 @@
-# Agroo Frontend
+# 🌱 Agroo – Smart Agriculture & Farmer Community Platform
 
-React + TypeScript (Vite) frontend for the Agroo Spring Boot backend.
+Agroo is a modern web-based agricultural platform designed to connect farmers, buyers, agricultural communities, and machinery owners in one place.
 
-## Stack
+The platform provides features for agricultural product listings, machinery sharing, community posts, group messaging, weather information, AI-assisted support, and user account management.
 
-- React 18 + TypeScript, built with Vite
-- Tailwind CSS
-- React Router v6
-- Axios (centralized client with JWT interceptor + unified error handling)
-- @stomp/stompjs + sockjs-client (live chat over WebSocket/STOMP)
+## 🌐 Live Application
 
-## 1. Install
+https://agroo-web-app-frontend.vercel.app/
+
+## 📦 Repositories
+
+### Frontend
+
+https://github.com/sudeesharavisara2-sys/AgrooWebApp-frontend.git
+
+### Backend
+
+https://github.com/sudeesharavisara2-sys/AgrooWebApp-backend.git
+
+---
+
+## ✨ Main Features
+
+- User registration and login
+- JWT-based authentication
+- Email OTP verification
+- Forgot password and password reset
+- User profile management
+- Agricultural product marketplace
+- Create, edit, view, and delete product listings
+- Product image support
+- Agricultural machinery listings
+- Community posts
+- Comments and likes
+- Farmer groups
+- Real-time messaging
+- Weather information by Sri Lankan location
+- Weather alerts
+- AI-powered agricultural chatbot
+- Admin dashboard
+- User administration
+- Agricultural price management
+- Alert and system log management
+- Responsive user interface
+
+---
+
+## 🛠️ Frontend Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| React | Frontend UI |
+| TypeScript | Type-safe JavaScript development |
+| Vite | Development and production build tool |
+| React Router | Client-side routing |
+| Axios | HTTP requests to the backend API |
+| Tailwind CSS | Application styling |
+| Context API | Authentication state management |
+| JWT | Authentication token handling |
+
+---
+
+## ⚙️ Backend Technology Stack
+
+The backend is maintained in a separate repository.
+
+| Technology | Purpose |
+|---|---|
+| Spring Boot | Backend application framework |
+| Java 17 | Backend programming language |
+| Spring Security | Authentication and authorization |
+| JWT | Secure API authentication |
+| Spring Data JPA | Database access |
+| Hibernate | ORM |
+| PostgreSQL | Relational database |
+| Azure Database for PostgreSQL | Cloud database hosting |
+| OpenAI API | AI chatbot integration |
+| OpenWeatherMap API | Weather information |
+| Gmail SMTP | OTP and email notifications |
+| WebSocket | Real-time communication |
+
+Backend repository:
+
+https://github.com/sudeesharavisara2-sys/AgrooWebApp-backend.git
+
+---
+
+## ☁️ Deployment Architecture
+
+```text
+User Browser
+     │
+     ▼
+Vercel
+Agroo Frontend
+     │
+     │ HTTPS REST API
+     ▼
+Azure App Service
+Spring Boot Backend
+     │
+     ├──────────────► Azure PostgreSQL
+     │
+     ├──────────────► OpenWeatherMap API
+     │
+     ├──────────────► OpenAI API
+     │
+     └──────────────► Gmail SMTP
+```
+
+---
+
+## 📁 Project Structure
+
+```text
+src/
+│
+├── api/
+│   ├── admin.ts
+│   ├── aiChat.ts
+│   ├── auth.ts
+│   ├── client.ts
+│   ├── comments.ts
+│   ├── groups.ts
+│   ├── likes.ts
+│   ├── machines.ts
+│   ├── messages.ts
+│   ├── posts.ts
+│   ├── products.ts
+│   ├── user.ts
+│   ├── weather.ts
+│   └── websocket.ts
+│
+├── components/
+│   ├── chat/
+│   ├── common/
+│   ├── layout/
+│   ├── machines/
+│   ├── posts/
+│   ├── products/
+│   └── weather/
+│
+├── context/
+│   └── AuthContext.tsx
+│
+├── pages/
+│   ├── admin/
+│   ├── auth/
+│   ├── chat/
+│   ├── machines/
+│   ├── posts/
+│   ├── products/
+│   ├── weather/
+│   ├── Home.tsx
+│   └── NotFound.tsx
+│
+├── types/
+│   └── index.ts
+│
+├── utils/
+│   └── helpers.ts
+│
+├── App.tsx
+├── index.css
+└── main.tsx
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure the following tools are installed:
+
+- Node.js
+- npm
+- Git
+
+Check the installed versions:
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+---
+
+## 📥 Clone the Repository
+
+```bash
+git clone https://github.com/sudeesharavisara2-sys/AgrooWebApp-frontend.git
+```
+
+Move into the project directory:
+
+```bash
+cd AgrooWebApp-frontend
+```
+
+---
+
+## 📦 Install Dependencies
 
 ```bash
 npm install
 ```
 
-## 2. Configure the API URL
+---
 
-```bash
-cp .env.example .env
-```
+## 🔐 Environment Variables
 
-`.env`:
-```
+Create a `.env` file in the frontend project root.
+
+```env
 VITE_API_BASE_URL=http://localhost:8081
 ```
 
-Change this if your Spring Boot backend runs on a different host/port.
+For production, configure the environment variable in Vercel:
 
-## 3. Backend CORS note
+```env
+VITE_API_BASE_URL=https://your-backend-domain.azurewebsites.net
+```
 
-Your `SecurityConfig` currently allows origins `http://localhost:3000` and
-`http://localhost:4200`. This app's dev server (`vite.config.ts`) is set to
-run on port **3000** to match that out of the box. If you change the Vite
-port, add it to `configuration.setAllowedOrigins(...)` in `SecurityConfig.java`
-and restart the backend.
+Do not store passwords, private API keys, database credentials, or other sensitive backend secrets in frontend environment variables.
 
-## 4. Run the dev server
+Variables beginning with `VITE_` are exposed to the browser.
+
+---
+
+## 💻 Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-Visit http://localhost:3000. Make sure the Spring Boot app is running on
-`http://localhost:8081` (or whatever you set `VITE_API_BASE_URL` to).
+The application will normally be available at:
 
-## 5. Build for production
+```text
+http://localhost:5173
+```
+
+---
+
+## 🏗️ Production Build
+
+Create a production build with:
 
 ```bash
 npm run build
-npm run preview   # serve the production build locally
 ```
 
-## WebSocket / chat endpoint
+The generated production files will be available inside:
 
-`src/api/websocket.ts` connects to `${VITE_API_BASE_URL}/ws` via SockJS and
-uses STOMP destinations `/app/chat/{groupId}/send` and
-`/app/chat/{groupId}/typing`, subscribing to `/topic/group/{groupId}` and
-`/topic/group/{groupId}/typing` — matching `ChatWebSocketController.java`.
-
-**If your `WebSocketConfig` registers the STOMP endpoint under a path other
-than `/ws`**, update the `WS_ENDPOINT` constant in `src/api/websocket.ts`
-accordingly (the uploaded backend didn't include `WebSocketConfig.java`'s
-contents, so this is the one thing to double check against your actual
-endpoint registration).
-
-## Project structure
-
-```
-src/
-  api/            Axios modules, one per backend feature (auth, products,
-                  machines, posts, comments, likes, groups, messages, admin),
-                  plus client.ts (interceptors) and websocket.ts (STOMP)
-  types/          TypeScript types mirroring every DTO, entity, and enum
-                  from the backend (com.agroo.agroo.*)
-  context/        AuthContext — current user, login/register/logout state
-  components/     Reusable UI: layout (Navbar, guards), and per-feature
-                  cards/forms (products, machines, posts)
-  pages/          Route-level views, organized by feature
-  utils/          Formatting helpers (currency, dates, enum labels, image URLs)
+```text
+dist/
 ```
 
-## Auth flow
+Preview the production build locally:
 
-Register → verify OTP (emailed OTP shown in the backend's dev response
-message) → logged in. JWT + refresh token are stored in `localStorage` and
-attached to every request via the Axios request interceptor. A 401 response
-clears the stored token and drops the user back to a logged-out state.
+```bash
+npm run preview
+```
 
-## Role-gated routes
+---
 
-- Public: home, product/machine/post browsing, product/post detail
-- `REGISTERED_USER` (any logged-in user): profile, change password, create/
-  edit own products & machines, posts, chat groups & messages
-- `ADMIN`: `/admin/*` — dashboard, user management, prices, alerts, activity
-  logs — matching `AdminController`'s `@PreAuthorize("hasRole('ADMIN')")`
+## 🔌 API Configuration
 
-## Known backend quirks reflected in the frontend
+The frontend uses a centralized Axios client.
 
-- `ProductController` has two create endpoints: multipart (`POST /api/products`,
-  with images) and JSON-only (`POST /api/products/json`, no images).
-  `productsApi.create()` picks the right one automatically based on whether
-  you pass image files.
-- Market prices (`/api/admin/prices/**`) are admin-only in the backend (there
-  is no public `PriceController`), so price management lives entirely under
-  `/admin/prices` in this app, even though `SecurityConfig` has a leftover
-  `permitAll()` rule for a `/api/prices/**` path that no controller maps to.
-- `GET /api/posts/{id}` and `GET /api/posts` work for guests (authentication
-  is optional there), but `GET /api/posts/feed` requires a logged-in user —
-  reflected as `/posts` (public) vs. `/feed` (protected) in this app.
+```text
+src/api/client.ts
+```
+
+The API base URL is loaded from:
+
+```ts
+import.meta.env.VITE_API_BASE_URL
+```
+
+with localhost available as the local development fallback.
+
+This allows the same frontend codebase to communicate with both local and production backend environments.
+
+---
+
+## 🔑 Authentication
+
+Agroo uses JWT-based authentication.
+
+After successful login, the frontend stores the authentication token and automatically includes it in protected API requests.
+
+Protected routes are controlled through the authentication context and route guards.
+
+Authentication features include:
+
+- Login
+- Registration
+- OTP verification
+- Forgot password
+- Reset password
+- Change password
+- User profile
+- Role-based access
+- Admin access
+
+---
+
+## 🛒 Agricultural Marketplace
+
+Users can browse agricultural products and manage their own listings.
+
+Product features include:
+
+- Product creation
+- Product editing
+- Product deletion
+- Product images
+- Product categories
+- Product type filtering
+- Sale type filtering
+- Search
+- Advanced search
+- Availability management
+- Farmer-specific listings
+
+---
+
+## 🚜 Machinery Marketplace
+
+The platform also allows agricultural machinery to be listed and discovered.
+
+Users can:
+
+- Browse machinery
+- View machinery details
+- Create machinery listings
+- Edit machinery listings
+- Manage their own machinery listings
+
+---
+
+## 🌦️ Weather System
+
+Agroo provides weather information for agricultural locations across Sri Lanka.
+
+Weather information includes:
+
+- Temperature
+- Humidity
+- Wind speed
+- Rainfall
+- Weather alerts
+- Location-based weather checks
+- Automatic refresh
+
+Weather information is retrieved through the backend using the OpenWeatherMap API.
+
+---
+
+## 🤖 AI Agricultural Assistant
+
+Agroo includes an AI-powered agricultural chatbot.
+
+The frontend communicates with the Spring Boot backend, while the backend securely communicates with the OpenAI API.
+
+API keys are never stored directly in the frontend source code.
+
+---
+
+## 💬 Community & Messaging
+
+Agroo provides community-oriented functionality including:
+
+- Community posts
+- Comments
+- Likes
+- Farmer groups
+- Group conversations
+- Messaging
+- WebSocket-based communication
+
+---
+
+## 👨‍💼 Admin Features
+
+Authorized administrators can access administrative functionality such as:
+
+- Admin dashboard
+- User management
+- Agricultural price management
+- Weather alert management
+- System log monitoring
+
+---
+
+## 🔒 Security
+
+The application follows a frontend/backend separation model.
+
+Sensitive values such as the following must remain on the backend or secure cloud environment:
+
+```text
+Database passwords
+JWT secrets
+OpenAI API keys
+Weather API keys
+Email application passwords
+```
+
+Only public frontend configuration values should use the `VITE_` prefix.
+
+---
+
+## 🌍 Deployment
+
+### Frontend
+
+The frontend is deployed using Vercel.
+
+Live URL:
+
+https://agroo-web-app-frontend.vercel.app/
+
+Production deployments are generated from the GitHub repository.
+
+### Backend
+
+The Spring Boot backend is deployed separately using Microsoft Azure App Service.
+
+### Database
+
+The application uses Azure Database for PostgreSQL.
+
+---
+
+## 🧪 Verify the Frontend
+
+Run a TypeScript and production build check:
+
+```bash
+npm run build
+```
+
+A successful build should finish with output similar to:
+
+```text
+✓ built in ...
+```
+
+---
+
+
+
+## 👨‍💻 Developer
+
+**Sudeesha Ravisara**
+
+Software Engineering Project  
+NSBM Green University
+
+---
+
+## 🔗 Project Links
+
+**Live Application**
+
+https://agroo-web-app-frontend.vercel.app/
+
+**Frontend Repository**
+
+https://github.com/sudeesharavisara2-sys/AgrooWebApp-frontend.git
+
+**Backend Repository**
+
+https://github.com/sudeesharavisara2-sys/AgrooWebApp-backend.git
+
+
+
+
+---
+
+<p align="center">
+  🌱 <strong>Agroo</strong><br/>
+  Smart Agriculture, Connected Community
+</p>
